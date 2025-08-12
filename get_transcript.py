@@ -35,16 +35,32 @@ def transcript(url):
         ytt_api = YouTubeTranscriptApi()  # ✅ Must instantiate
         transcript_list = ytt_api.list(video_id)
 
-        # Try manually created transcript first
-        try:
-            transcript_obj = transcript_list.find_manually_created_transcript(['en'])
-            print("[INFO] Using manually created English transcript.")
-        except:
-            # Fall back to auto-generated
-            transcript_obj = transcript_list.find_generated_transcript(['en'])
-            print("[INFO] Using auto-generated English transcript.")
+        # Show options
+        options = []
+        for i, transcript in enumerate(transcript_list):
+            t_type = "Auto" if transcript.is_generated else "Manual"
+            print(f"{i + 1}. {transcript.language} ({t_type})")
+            options.append(transcript)
 
-        transcript_data = transcript_obj.fetch()
+        # Let user choose
+        choice = int(input("Pick one: "))
+        selected = options[choice - 1]
+
+        # Fetch it
+        transcript_data = selected.fetch()
+
+
+        # # Try manually created transcript first
+        # try:
+        #     transcript_obj = transcript_list.find_manually_created_transcript(['en'])
+        #     print("[INFO] Using manually created English transcript.")
+        # except:
+        #     # Fall back to auto-generated english
+        #     transcript_obj = transcript_list.find_generated_transcript(['en'])
+        #     print("[INFO] Using auto-generated English transcript.")
+
+
+
 
         # Make sure 'data' directory exists
         os.makedirs("data", exist_ok=True)

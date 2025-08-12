@@ -1,544 +1,312 @@
-0:00:00 : before we get into the video let me just
-0:00:02 : quickly explain how this video came
-0:00:03 : about so recently I started working at a
-0:00:06 : startup called webolite and through them
-0:00:09 : I was introduced to Jacob from Clarity
-0:00:11 : quarters and he proposed that he makes a
-0:00:15 : tutorial video right here on CS dojo and
-0:00:18 : when I asked my Twitter followers if
-0:00:20 : it's something they want to see they
-0:00:22 : basically said yes and that's why I
-0:00:24 : decided to post it right here so let's
-0:00:27 : just get started
-0:00:28 : one thing that I find very useful about
-0:00:30 : Python scripts is having some type of a
-0:00:32 : script that can send you an alert or you
-0:00:34 : can ping for information back now I've
-0:00:36 : done this in videos with an SMS alert
-0:00:38 : and different things like that but it
-0:00:40 : either costs something or there's
-0:00:42 : workarounds that are kind of country
-0:00:43 : based that doesn't work for all the
-0:00:45 : viewers so what we're going to do today
-0:00:46 : is set up a telegram bot that does
-0:00:48 : something similar in just a couple lines
-0:00:50 : of python so if you don't have a
-0:00:53 : telegram account you want to go ahead
-0:00:54 : and sign up for one and you'll come to a
-0:00:56 : kind of starting screen like this it's
-0:00:58 : free so go ahead and grab it now we need
-0:01:00 : to get an API key to work with telegram
-0:01:02 : so we're going to search for bot father
-0:01:04 : bot fathers telegram's official bot for
-0:01:07 : handing out API keys so even though
-0:01:09 : we're going to create our own custom bot
-0:01:11 : we're going to get an API key from
-0:01:13 : botfather you can see it'll show up here
-0:01:16 : go ahead and click on that it says some
-0:01:18 : things that this bot can do we're going
-0:01:19 : to go ahead and hit start and you can
-0:01:21 : see here the different things that that
-0:01:24 : we can ask for here and there is a
-0:01:28 : I think it's new but we'll just try it
-0:01:30 : so you're gonna do Slash new bot
-0:01:33 : and then it says what do you want to
-0:01:34 : call it so you can pick whatever name
-0:01:35 : you want this doesn't have to be unique
-0:01:37 : so ours is going to be
-0:01:39 : tutorial bot
-0:01:42 : now this next one does have to be unique
-0:01:44 : so it's going to say if the bot already
-0:01:46 : exists and it has to end with bot so we
-0:01:48 : can do our something like Clarity
-0:01:52 : tutorial underscore bot and you got to
-0:01:55 : remember it because we gotta find it
-0:01:56 : later so
-0:01:58 : you can see that that worked it was
-0:02:00 : unique if it wasn't unique it's going to
-0:02:02 : say that that bot already exists try and
-0:02:03 : create another one and you can just pick
-0:02:05 : a different bot name here so you can see
-0:02:07 : now we have this HTTP API access token
-0:02:11 : now you're gonna have to get your own so
-0:02:13 : don't copy mine here
-0:02:14 : and we are going to use that so you're
-0:02:17 : going to go ahead and select that entire
-0:02:20 : line here all the way over and then we
-0:02:23 : can go ahead and minimize this
-0:02:25 : now for our program here we're going to
-0:02:29 : do it I'm gonna do it in replit for a
-0:02:31 : couple of reasons one you can duplicate
-0:02:33 : my code fully and run it in the exact
-0:02:35 : same environment that I did
-0:02:37 : you can also run this locally or however
-0:02:39 : you want uh replit offers some paid
-0:02:42 : packages to run the spot 24 7 and
-0:02:44 : different things like that there's also
-0:02:45 : some workarounds to run it 24 7 for free
-0:02:48 : so that's that's the route we're gonna
-0:02:50 : go here so you can set this up locally
-0:02:52 : and follow the exact same steps I'm just
-0:02:55 : going to do it in wrap lit there'll be a
-0:02:57 : link in the description if you want to
-0:02:58 : copy my code so we're going to go ahead
-0:02:59 : and do create a new replit it's in
-0:03:02 : Python obviously
-0:03:03 : we're going to do telegram bot
-0:03:07 : and then we can go ahead and add in
-0:03:08 : we're going to add in one package that's
-0:03:10 : going to help us work with that API so
-0:03:11 : what we're going to do here is we're
-0:03:13 : going to find our package so I clicked
-0:03:15 : on this button there's a couple here
-0:03:17 : options here for different apis that you
-0:03:19 : can use the one I chose to use that
-0:03:21 : worked really nicely with replit or
-0:03:24 : whatever environment you're going to
-0:03:26 : work with is pi telegram bot API and you
-0:03:31 : can see it's in version 3.77 so in the
-0:03:34 : future if this doesn't quite work you
-0:03:35 : want to make sure you get the same
-0:03:36 : version as me kind of hug that version
-0:03:38 : but also make sure when you're searching
-0:03:40 : for this package that you're not getting
-0:03:43 : one of these others that aren't the
-0:03:44 : right thing we're talking about this is
-0:03:46 : like 0.0.4 so make sure you have the
-0:03:49 : right bot now if you're in a different
-0:03:50 : environment if you're in just your
-0:03:52 : traditional local environment you can
-0:03:53 : just do your pip install like you
-0:03:55 : normally would
-0:03:56 : so I'm going to go ahead and hit that
-0:03:57 : plus button and it's going to install my
-0:03:59 : package for me
-0:04:00 : and we can go ahead and go back in our
-0:04:02 : main project now if you're working with
-0:04:03 : a free version of replit all these are
-0:04:06 : going to be public the code that you're
-0:04:08 : writing so you don't want to put your
-0:04:09 : API key directly in the program itself
-0:04:12 : so what we're going to do is we're going
-0:04:13 : to add another file up here and we're
-0:04:15 : going to call this dot EnV
-0:04:18 : y now what that's going to do it's going
-0:04:20 : to give us a private place to store that
-0:04:21 : API key that isn't shared so I'm going
-0:04:23 : to say API underscore key I'm going to
-0:04:26 : do all capitals just because it's a
-0:04:28 : constant and then I'm going to paste in
-0:04:30 : that API key and then I can save this
-0:04:34 : now to get that API key into our program
-0:04:36 : we can actually import OS and then we
-0:04:39 : can set our API key equal to os.get EnV
-0:04:45 : NV
-0:04:47 : and then just the key name so remember
-0:04:49 : we call it API underscore key
-0:04:53 : cool now we have our API key in our
-0:04:55 : program as well
-0:04:58 : we're also going to import telebot here
-0:05:02 : perfect that's it so now we can go ahead
-0:05:05 : and set up the basics of our bot I'm
-0:05:06 : going to send you I'm going to set the
-0:05:08 : most simplistic bot you can and a couple
-0:05:10 : different things so I'm going to use
-0:05:12 : Yahoo stocks to kind of pull in data
-0:05:14 : just to showcasing you can use this for
-0:05:16 : whatever data you're trying to pull in
-0:05:18 : so I'm going to show you how to send a
-0:05:20 : message to the bot and it sends
-0:05:22 : something back to you sends information
-0:05:23 : back to you so how the Bots work and
-0:05:26 : we're going to start with just a reply
-0:05:28 : so we're going to send it something it's
-0:05:29 : going to reply the same thing back to us
-0:05:31 : so we're going to do atbot Dot message
-0:05:34 : underscore Handler so this is the kind
-0:05:38 : of setup that handles the different
-0:05:39 : commands that come into the bot we're
-0:05:41 : going to look out for a command
-0:05:43 : and the command that I want to look out
-0:05:45 : for is greet so when we send a command
-0:05:49 : of greet we want the bot to do something
-0:05:51 : back and then you define your function
-0:05:54 : of what you want to do right underneath
-0:05:55 : that
-0:05:56 : you can call this function whatever you
-0:05:58 : want I'm going to mimic that from above
-0:06:00 : and just call it greet I'm going to pass
-0:06:02 : in our message so this is when it has a
-0:06:06 : message that has a command of greet
-0:06:07 : which I'll show you in a minute it's
-0:06:08 : going to run this function and it's
-0:06:10 : going to pass in the message as well now
-0:06:13 : we can just do bot dot reply to
-0:06:17 : we're going to reply to that message
-0:06:22 : with hey how's it going so this is going
-0:06:24 : to be our basic setup for the first
-0:06:26 : couple lines of our bot here
-0:06:30 : and also we don't want to forget to
-0:06:32 : create our bot as well so we're going to
-0:06:34 : say bot equals telebot
-0:06:37 : dot telebot watch your capitalization
-0:06:41 : here
-0:06:42 : and then we're going to pass in our API
-0:06:44 : key now we got to set this bot to keep
-0:06:46 : looking out for messages as well so
-0:06:48 : we're going to say bot dot pulling
-0:06:51 : so this is going to keep checking for
-0:06:53 : messages
-0:06:54 : you could look up in the documentation
-0:06:56 : I'm not sure how often it checks it
-0:06:57 : seems pretty instant so I'm sure it's
-0:06:59 : every couple seconds or whatever
-0:07:01 : but that's fine for us so now that we
-0:07:04 : have everything here we can go ahead and
-0:07:05 : run this script
-0:07:07 : you can see it doesn't do anything right
-0:07:09 : because it's just it's just pulling for
-0:07:11 : information but we haven't sent anything
-0:07:12 : to our bot yet
-0:07:14 : so the one thing that we need to do is
-0:07:17 : start a conversation with our bot so
-0:07:20 : ours was Clarity tutorial underscore bot
-0:07:23 : so what I'm going to do is I'm going to
-0:07:25 : search for that
-0:07:27 : and you're you're going to search for
-0:07:28 : whatever you named yours
-0:07:31 : and you can see that here's our bot
-0:07:33 : we're going to click on that we're going
-0:07:35 : to start a conversation
-0:07:37 : Now commands start with the slash symbol
-0:07:40 : so you remember in our program now we
-0:07:42 : don't have to do them all as commands
-0:07:44 : but we set up the first kind of test as
-0:07:46 : a slash greet so we're going to try that
-0:07:49 : so we're gonna go slash greet
-0:07:55 : and of course coding is really fun so
-0:07:57 : you're
-0:07:59 : commands really matter here this is
-0:08:01 : commands with an S we'll change that
-0:08:03 : let's stop this we'll restart our bot
-0:08:08 : and pretend I didn't send like eight
-0:08:10 : messages trying to figure that out
-0:08:16 : and you can see that if we use the
-0:08:18 : Correct capitalization we get the
-0:08:20 : response that we are looking for here
-0:08:21 : you can see it says hey how's it going
-0:08:24 : which is what we typed as our response
-0:08:27 : so we have a working bot set up here
-0:08:31 : and this is how you're going to use
-0:08:32 : commands to kind of get text into your
-0:08:34 : Bot itself
-0:08:36 : now you probably noticed that it used a
-0:08:38 : reply line so it copied my message from
-0:08:41 : above into the actual message it sent
-0:08:44 : that's because we use the reply to one
-0:08:47 : that you'll see that's very common is
-0:08:49 : also to
-0:08:51 : we'll copy this
-0:08:54 : let's call this hello
-0:08:58 : we'll say hello here if you say hello
-0:09:01 : we'll call this function hello and
-0:09:04 : instead of reply to let's do send
-0:09:07 : message
-0:09:08 : so what we can do is do send underscore
-0:09:11 : message instead
-0:09:14 : now this you it has to know what chat
-0:09:17 : it's in so we need the chat ID now
-0:09:20 : luckily we can get that off the message
-0:09:22 : itself so we can do message.chat.id
-0:09:27 : now if we stop this and run it now we
-0:09:30 : should have a command that we can run
-0:09:31 : with hello no capitals here
-0:09:37 : you can see now it doesn't have the re
-0:09:40 : it's not replying to a certain message
-0:09:42 : it's just prompting to actually send
-0:09:44 : that message cool so let's do something
-0:09:46 : kind of useful now uh I wanted to use a
-0:09:49 : library that I don't have to set up an
-0:09:51 : API key or anything like that just for
-0:09:53 : ease of use so if you want to Ping for
-0:09:55 : different information follow along
-0:09:56 : exactly with me here see how I do it
-0:09:58 : from Yahoo and then Branch out and do
-0:10:00 : whatever you want and make sure to share
-0:10:02 : it so we can all see how you did it that
-0:10:04 : sort of thing
-0:10:06 : so I'm going to grab the Yahoo API here
-0:10:10 : so I'm going to pull in Yahoo finance
-0:10:13 : and then I'm going to walk you through a
-0:10:15 : function that I created to grab
-0:10:18 : the Wall Street bet stock so if you've
-0:10:20 : been following Reddit and all the
-0:10:21 : craziness with GameStop and different
-0:10:23 : stocks like that I want to create a
-0:10:25 : function that whenever I ping it it
-0:10:27 : sends me the last three days worth of
-0:10:30 : stock prices for their favorite stocks
-0:10:32 : like AMC uh GameStop and Nokia
-0:10:37 : so here's the function that I use to
-0:10:40 : create this and we'll take a look at it
-0:10:42 : here
-0:10:44 : so what I did was I added another
-0:10:46 : command function so we're going to have
-0:10:48 : to use the Slash and WSB I'm going to
-0:10:50 : show you how you can do something
-0:10:51 : without a command next but we're going
-0:10:53 : to do one more command here so this is
-0:10:55 : slash WSB standing for Wall Street bets
-0:10:58 : and what it does it runs this get stock
-0:11:00 : function
-0:11:01 : we're going to pull in a response that's
-0:11:03 : just where I saved all my data back when
-0:11:06 : I get responses and then you can choose
-0:11:08 : whatever stocks you want to put in here
-0:11:10 : I put the three Wall Street bet stocks
-0:11:12 : that I see that are most popular with
-0:11:13 : them
-0:11:14 : then for each stock I'm pulling in data
-0:11:17 : off of Yahoo so this is where I call the
-0:11:20 : Yahoo finance API so I'm saying download
-0:11:23 : the ticker and the ticker that I'm
-0:11:25 : choosing is one of these three it's
-0:11:27 : rotating through those each time it's
-0:11:29 : getting a period of two days and it's
-0:11:30 : giving you the one day price so that's
-0:11:33 : the data I'm getting back that data is a
-0:11:36 : panda's uh data frame that you can kind
-0:11:37 : of check out and look at but essentially
-0:11:39 : it's just going to have this data in it
-0:11:41 : I'll show you a pop-up here to kind of
-0:11:43 : show you what the data frame looks like
-0:11:45 : we're going to reset that index so what
-0:11:48 : that does instead of the date being the
-0:11:49 : index is going to reset the index to be
-0:11:51 : zero on the side and then we can pull
-0:11:52 : the date out of that information so then
-0:11:55 : my response is going to be the stock
-0:11:57 : this is an F string so we're putting in
-0:12:00 : the stock name
-0:12:01 : and then we're going to append that to
-0:12:02 : our stock data frame
-0:12:04 : and then for each row so for each row of
-0:12:07 : information for that stock we're going
-0:12:09 : to pull out the close price and round it
-0:12:11 : to two decimal points and we're going to
-0:12:13 : format the date in month slash day so
-0:12:16 : that's what we're doing on this line and
-0:12:17 : then we're going to add that to our
-0:12:19 : response append the stock price
-0:12:23 : then just print out a blank line after
-0:12:26 : each stock
-0:12:28 : so now after we have all of our stocks
-0:12:31 : information I do something a little
-0:12:32 : special here I'm adding in some spacing
-0:12:35 : just to make it look right on the output
-0:12:37 : on telegram itself it gets all kind of
-0:12:39 : jumbled up so what I'm doing here is I'm
-0:12:42 : adding the column headers and I'm making
-0:12:44 : sure that each of them have 10 spaces so
-0:12:47 : they're kind of lined up and then I'm
-0:12:50 : doing another 10 spaces for the next
-0:12:52 : column another 10 spaces for the next
-0:12:53 : column so we got the stock name the
-0:12:55 : first date and then the most recent date
-0:12:58 : and then I'm just simply sending that in
-0:13:01 : a message in a response so that's it
-0:13:02 : that's how we created that function
-0:13:05 : now we can go ahead and stop this if we
-0:13:07 : run it again then let's open up our
-0:13:10 : emulator here and we'll do slash WSB
-0:13:13 : whoops we in we installed some other
-0:13:16 : libraries so we gotta wait until it
-0:13:17 : actually starts running here I got a
-0:13:19 : little impatient drink some coffee it's
-0:13:21 : not tea I'm not sent Dex
-0:13:24 : then you'll see that it still did run
-0:13:26 : our function after we uh finally got the
-0:13:28 : data it's printing out to console I just
-0:13:30 : had that for some debugging and things
-0:13:31 : like that but if you open up our
-0:13:34 : tutorial bot you can see that when we
-0:13:36 : send it slash WSB it sends us back a
-0:13:40 : response with the data we requested so
-0:13:43 : you can see here these are like the
-0:13:44 : column headers it has stock 0331 and
-0:13:48 : 0401 which is last two days the US
-0:13:51 : market was open and then the stock
-0:13:53 : prices for those stocks the formatting
-0:13:55 : is a little weird because telegram's a
-0:13:56 : little finicky about how things are
-0:13:58 : structured so you can play with that a
-0:14:00 : little bit and make it better I'm going
-0:14:01 : to show you one more and that is how to
-0:14:04 : not use a command so we don't want to
-0:14:06 : use slash anymore say say you want to do
-0:14:08 : something custom like you want to say
-0:14:10 : some type of code so you want to say
-0:14:12 : like stop a price space and then a stock
-0:14:15 : name or something and then you want to
-0:14:16 : get data back
-0:14:18 : so here's the setup we're going to use
-0:14:20 : for this next part it's a little
-0:14:23 : different so we're going to use message
-0:14:25 : Handler again but we're going to use the
-0:14:26 : function keyword and then we're going to
-0:14:28 : create a custom function
-0:14:30 : now that custom function when it returns
-0:14:33 : true then whatever's inside of here
-0:14:35 : where I said pass that will run so your
-0:14:39 : function is going to either return true
-0:14:41 : or false based on the message and then
-0:14:44 : if it's true it'll run whatever you want
-0:14:46 : to create
-0:14:48 : that might be a little confusing but
-0:14:50 : we'll go ahead and walk through it here
-0:14:52 : my function so this is to return true or
-0:14:55 : false so this is to decide if this send
-0:14:57 : price actually runs or not so our
-0:15:01 : function that we want to control that is
-0:15:02 : called stock request so what I wanted a
-0:15:06 : stock request to look like I'll pull one
-0:15:07 : up on the screen is to have price
-0:15:10 : space and then a stock name so what we
-0:15:14 : do here is we test to see if it's
-0:15:16 : possible that this is a stock request so
-0:15:18 : what I do right away is I do request I
-0:15:21 : take the message and the text from the
-0:15:23 : message and I split it and when you
-0:15:25 : split with the default parameters it
-0:15:27 : splits it based on Spaces
-0:15:29 : so what it's going to do here is it's
-0:15:31 : going to split it up into as many spaces
-0:15:33 : as it has so if I say uh price space gme
-0:15:37 : space hello world it doesn't matter the
-0:15:40 : it's going to break it into those first
-0:15:42 : two chunks so what I'm saying is the
-0:15:44 : length of those chunks I have to have at
-0:15:47 : least two right because if I have price
-0:15:49 : space and then the stock name that's
-0:15:52 : going to be two so I'm going to make
-0:15:54 : sure it's at least of length two at
-0:15:56 : least has one space in it
-0:15:58 : then I'm going to take the request that
-0:16:00 : first space I'm going to lower case it
-0:16:03 : so in case you do price with a capital P
-0:16:05 : it'll still work and I'm going to say if
-0:16:08 : it's not in price
-0:16:10 : so if it's not at least of a link to
-0:16:13 : or if the first word isn't price we're
-0:16:16 : going to return false because we don't
-0:16:18 : want to run it
-0:16:19 : anything else is going to return true so
-0:16:21 : if it does have price as the first word
-0:16:24 : and it does have at least two items in
-0:16:28 : the message itself then we're gonna run
-0:16:31 : send price
-0:16:33 : so now we can fill out this function
-0:16:35 : below here I'll copy pasta a little more
-0:16:37 : and then walk you through it
-0:16:40 : so remember we're doing something here
-0:16:42 : that could cause an error if we weren't
-0:16:44 : validating before this is only going to
-0:16:46 : run if we have a zero index which is
-0:16:49 : price and a one index of something so I
-0:16:53 : can go ahead and safely try to grab out
-0:16:55 : the one index because I know this
-0:16:57 : wouldn't run if we didn't have a one
-0:16:59 : index because we tested for it up here
-0:17:02 : so my request is going to be the one
-0:17:05 : index I know the price is at the zero
-0:17:07 : index now what's at the one index we
-0:17:09 : don't know we hope it's a stock ticker
-0:17:12 : so if it isn't a stock ticker Yahoo is
-0:17:15 : just going to return no data and we can
-0:17:17 : send that back that we didn't recognize
-0:17:18 : the stock symbol or whatever
-0:17:20 : so what we're going to do here you can
-0:17:22 : see instead of putting in a ticker I use
-0:17:24 : whatever the user sent in request and
-0:17:27 : I'm gonna get one minute data chunks and
-0:17:31 : I'm gonna get five minutes worth of that
-0:17:34 : data so essentially we're going to get
-0:17:35 : the last one minute stock price of
-0:17:38 : whatever ticker they want to put in
-0:17:40 : so this could be useful like during the
-0:17:42 : actual trading Day stuff like that
-0:17:44 : so here's my check when I get that data
-0:17:47 : back I'm making sure the size is greater
-0:17:49 : than zero if the size is less than zero
-0:17:51 : we're just going to send back that we
-0:17:52 : didn't get any data if the size is
-0:17:55 : greater than zero then we know we got
-0:17:56 : some stock information back and we're
-0:17:58 : going to go ahead and format that I'm
-0:18:00 : going to do something very similar to
-0:18:02 : what I did before so I won't break it
-0:18:03 : down too much but I'm essentially making
-0:18:05 : a format a date this time I do it a
-0:18:07 : little differently because it's minute
-0:18:08 : data instead of daily data so I'm going
-0:18:10 : to pass back a month a day
-0:18:13 : uh the 12 hour time frame and the
-0:18:16 : minutes and then AM or PM I'm going to
-0:18:19 : set the index blah blah and then
-0:18:21 : eventually I'll send the message
-0:18:23 : so let's go ahead and try this out so we
-0:18:25 : can stop here
-0:18:27 : we can run it again now remember we
-0:18:30 : picked the format we could pick this to
-0:18:32 : be whatever we want so we are going to
-0:18:35 : start this command with price do space
-0:18:37 : and then whatever we want to uh whatever
-0:18:41 : we want to look up so let's try a new
-0:18:44 : one let's get a popular one so we'll go
-0:18:46 : price Tesla
-0:18:48 : and you can see now we get a now you
-0:18:51 : could have a nice title here or
-0:18:52 : something that would have looked nicer
-0:18:53 : now that I'm now that I'm looking at so
-0:18:55 : we know we're looking at test layer but
-0:18:57 : you can see we got the last five minutes
-0:18:58 : worth of data now the Market's closed so
-0:19:00 : we saw the actual last five minutes of
-0:19:02 : the day uh if the if it was a live
-0:19:05 : market you would see the last five
-0:19:06 : minutes now but we got those prices here
-0:19:09 : so let's try another one we'll say price
-0:19:12 : some garbage
-0:19:13 : and you can see that we got no data back
-0:19:15 : because it wasn't a real stock symbol
-0:19:17 : let's try one more so we're gonna say
-0:19:19 : price
-0:19:20 : gme and then this is my favorite stock
-0:19:25 : so what's gonna happen here is it's
-0:19:27 : gonna break up this and it's gonna still
-0:19:29 : pass our validation right the first
-0:19:31 : index well nope
-0:19:33 : now it will the first index is price and
-0:19:36 : then the second is going to be a stock
-0:19:37 : ticker and it's going to ignore
-0:19:38 : everything else in the statement so it
-0:19:40 : is still going to give us back the data
-0:19:42 : I hope and you can see that we did get
-0:19:43 : our data back now if you like this video
-0:19:45 : if you want us to do a couple more
-0:19:47 : things with telegram we got a few more
-0:19:48 : ideas here let us know in the comments
-0:19:50 : what you want to see and we'll put it in
-0:19:52 : the next video the one thing that you
-0:19:54 : want to note here is if you're on a free
-0:19:56 : account of replit this is going to fall
-0:19:58 : asleep after a certain period of time if
-0:20:00 : you're on a paid version of the account
-0:20:02 : you can get a trial that you can go down
-0:20:04 : to always on and turn this on and that
-0:20:06 : will leave your Bot running 24 7. now
-0:20:09 : there are some workarounds for this as
-0:20:11 : well that I will show in the next
-0:20:13 : telegram video
-0:20:14 : along with anything else you would like
-0:20:16 : me to show in the comments below give
-0:20:19 : this a shot let me know what you think
-0:20:20 : and until next time keep coding
+0:00:04 : नमस्कार वेलकम टू करियर 247 मैं हूं
+0:00:06 : प्रशांत धवन नाउ रिसेंटली बहुत सारी
+0:00:07 : जिओपॉलिटिकल डेवलपमेंट्स हुई है। डॉन्ड
+0:00:09 : ट्रंप ने भारत से रिलेटेड रशिया से
+0:00:12 : रिलेटेड बहुत इंपॉर्टेंट बातें बोली है और
+0:00:14 : आपने एक बात नोट करी होगी ट्रंप की एक
+0:00:16 : वीडियो वायरल हो चुकी है। ट्रंप एक्चुअली
+0:00:19 : कंफ्यूज कर गए कि अलास्का यूएसए का पार्ट
+0:00:22 : है या रशिया का पार्ट है। इधर आप देख
+0:00:24 : पाओगे आज के समय कई लोग ट्वीट कर रहे हैं
+0:00:27 : कि सोचो अगर बाइडन ने ब्लंडर किया होता
+0:00:30 : अमेरिकनंस इतनी ज्यादा आलोचना करते मैं कम
+0:00:32 : से कम पांच छह शॉट्स बना सुनाकर बैठा होता
+0:00:34 : मजाक कर रहा हूं और डॉनल्ड ट्रंप खुद पूछ
+0:00:36 : रहे होते कि बाइडन की मेंटल स्टेट क्या
+0:00:39 : ठीक है या नहीं है बट इस पर्टिकुलर केस
+0:00:41 : में ट्रंप फुल कॉन्फिडेंस के साथ अपने
+0:00:43 : रक्षा मंत्री डिफेंस सेक्रेटरी के साथ
+0:00:45 : खड़े होकर यह कहते हैं कि फ्राइडे को मैं
+0:00:47 : पुतिन से मिलने के लिए जा रहा हूं रशिया
+0:00:50 : में जबकि यह रशिया में नहीं जा रहे यह
+0:00:52 : अलास्का में जा रहे हैं। आपको याद होगा
+0:00:54 : मैंने इस पर वीडियो भी करी थी अपलोड तीन
+0:00:56 : दिन पहले 10 लाख लोगों ने वीडियो देखी थी
+0:00:58 : पुतिन टू मीट ट्रंप इन यूएसए क्योंकि
+0:01:00 : अलास्का यूएसए का पार्ट है और जो यह क्लिप
+0:01:03 : है यह मैं चाहता हूं आप देखें नाउ इधर आप
+0:01:06 : देखोगे फुल कॉन्फिडेंस के साथ यह बताएंगे
+0:01:08 : कि यह काफी एंबरेस्ड है वाशिंगटन डीसी की
+0:01:10 : करंट स्टेट को लेकर बाय द वे ट्रंप ने
+0:01:13 : यूएसए की कैपिटल में मिलिट्री डिप्लॉय
+0:01:16 : करने का फैसला कर दिया है। यह कह रहे हैं
+0:01:17 : कि मैं अपने देश की कैपिटल को बिल्कुल
+0:01:19 : क्लीन करूंगा। हमारे देश की कैपिटल
+0:01:22 : बेसिकली दरवाजा है हमारे देश का। अगर
+0:01:24 : वाशिंगटन डीसी में ही ड्रग्स हैं, क्राइम
+0:01:26 : है तो लोग हमारे कंट्री की रिस्पेक्ट कैसे
+0:01:28 : करेंगे? यह एक ऐसी सोच है जिससे आई थिंक
+0:01:30 : हम सब लोग एग्री करेंगे कि कैपिटल किसी भी
+0:01:33 : देश का बिल्कुल बेस्ट सिटी होनी चाहिए उस
+0:01:35 : कंट्री की। इंडिया में अनफॉर्चुनेटली मैं
+0:01:37 : कहूंगा काश दिल्ली को लेकर भी हमारी ऐसी
+0:01:40 : एक तरीके से एक जुनून वाली सोच होती कि या
+0:01:42 : तो दिल्ली को हम बेस्ट सिटी बनाएंगे
+0:01:44 : इंडिया की। क्योंकि कैपिटल है हमारी या
+0:01:46 : फिर हम किसी और सिटी को कैपिटल बनाएंगे।
+0:01:49 : बट यहां पर आप देख पाओगे ट्रंप पहले तो यह
+0:01:51 : कहते हैं कि वाशिंगटन डीसी में सब कुछ ठीक
+0:01:53 : करने का प्रोसेस स्टार्ट करके मैं पुतिन
+0:01:55 : से मिलने के लिए जाऊंगा। इमरजेंसी
+0:02:05 : अबाउट हाउ अनसेफ एंड हाउ डस्टिंग
+0:02:08 : दिस वन ब्यूटीफुल कैपिटल वाउ ट्रंप जब
+0:02:12 : पूरे देश को यह बता रहे थे कि मैं रशिया
+0:02:15 : जा रहा हूं अचानक से ऑब्वियसली सब लोग
+0:02:16 : शॉक्ड हो गए कि क्या हुआ प्लान चेंज हो गए
+0:02:18 : क्या ट्रंप के पहले तो अलास्का जा रहे थे
+0:02:20 : अब बोल रहे हैं रशिया जा रहा हूं बट लोगों
+0:02:23 : ने बाद में फिर पीट हेक्सेस को देखा जिस
+0:02:25 : तरीके से घोर रहे हैं ट्रंप कि अरे क्या
+0:02:27 : बोल दिया आपने? हमें रशिया नहीं यूएसए में
+0:02:29 : ही जा रहे हैं। अलास्का में जा रहे हैं।
+0:02:30 : अलास्का रशिया के काफी करीब है। बट इट इज
+0:02:33 : नॉट पार्ट ऑफ रशिया। हमने रशिया से
+0:02:35 : अलास्का परचेस कर लिया था 1867 में। और जब
+0:02:38 : एक बार ट्रंप ने यह बात कंफर्म कर दी
+0:02:40 : ऑफिशियली कि ठीक है यह पुतिन से मिलेंगे।
+0:02:42 : उसके बाद अगला सवाल यह था कि क्या चाइना
+0:02:46 : पर टेरेफ लगने वाले हैं? आप देखोगे यूएस
+0:02:48 : मीडिया में यह सवाल बार-बार पूछा जा रहा
+0:02:50 : है कि अगर इंडिया पर टेरेफ लगाए हैं रशिया
+0:02:53 : से ऑयल परचेस करने की वजह से तो सेम टाइप
+0:02:55 : के टेरिफ चाइना पर क्यों नहीं लगाए जा
+0:02:57 : रहे? यह मैं आपको बात बता दूं। यह टॉपिक
+0:03:00 : सीएनएन, न्यूज़ वेरियस यूएस के
+0:03:03 : न्यूज़ आउटलेट में पूछा जा रहा है। कभी भी
+0:03:05 : अगर यूएसए के वाइस प्रेसिडेंट इनके कोई
+0:03:07 : सेक्रेटरी मीडिया के सामने आते हैं। उनसे
+0:03:10 : यह सवाल पूछा जाता है। रिसेंटली एक
+0:03:12 : न्यूज़ के इंटरव्यू में जेडी वैन से भी
+0:03:14 : पूछा गया था कि डॉनल्ड ट्रंप भारत पर
+0:03:17 : टेरिफ लगाने से डरते नहीं है। मगर चाइना
+0:03:20 : के मामले में बार-बार टाको क्यों हो रहा
+0:03:22 : है? यह आप देख पाओगे।
+0:03:25 : सिग्निफिकेंट
+0:03:32 : यह हर कोई जर्नलिस्ट पूछेगा यहां पे कि
+0:03:34 : अगर आप इंडिया पे टेरेफ लगाने से नहीं
+0:03:36 : डरते तो क्या सिमिलर टाइप के टेरिफ आप
+0:03:39 : चाइना पे लगाओगे
+0:03:44 : चाइना
+0:03:46 : बिकॉज़ आवर रिलेशनशिप चाइना
+0:03:50 : लॉट ऑफ़ अदर थिंग्स हैव नथिंग टू द रशियन
+0:03:52 : सिचुएशन
+0:03:57 : चाइना सबसे बड़ा वायर है रशियन ऑयल का और
+0:04:00 : स्पेसिफिकली इंडिया को सिंगल आउट करके यह
+0:04:03 : टैरे लगाना दिस इज रियली अनफेयर और यह बात
+0:04:06 : आप देखोगे कई यूएस जर्नलिस्ट इस
+0:04:08 : कॉन्टेक्स्ट में पूछ रहे हैं कि क्या यह
+0:04:10 : अनफेयर ट्रीटमेंट करके इंडिया यूएस
+0:04:13 : रिलेशंस को लॉन्ग टर्म डैमेज किया जा रहा
+0:04:15 : है या नहीं और जब ट्रंप रिसेंटली मीडिया
+0:04:18 : के सामने आए तब लोगों को उम्मीद थी कि
+0:04:20 : शायद इस बार यह अनाउंस करेंगे के चाइना पर
+0:04:23 : भी यह टेररिफ लगा रहे हैं रशिया से ऑयल
+0:04:25 : परचेस करने के मामले में। बट ट्रंप चिकन
+0:04:27 : आउट। इधर यहां पर आप लोग देख पाओगे ट्रंप
+0:04:29 : का सोशल मीडिया प्लेटफार्म। अगेन देखिए
+0:04:31 : मैं जब भी यहां पे ट्रंप का सोशल मीडिया
+0:04:33 : प्लेटफार्म देखता हूं ना सच में माइंड में
+0:04:35 : क्वेश्चन आता है। अगर इनका एक प्रेसिडेंट
+0:04:38 : जो ठीक है बिलनेियर है बट कोई ऐसा भी नहीं
+0:04:40 : है कि मुकेश अंबानी के लेवल का एक
+0:04:42 : बिलनेियर है। यह खुद का सोशल मीडिया
+0:04:44 : प्लेटफार्म अगर यह बना सकता है तो हम लोग
+0:04:46 : ऐसा क्यों नहीं कर सकते? व्हाई कांट वी डू
+0:04:48 : द सेम? मैंने आज तक देखिए YouTube पर खुद
+0:04:51 : का कोई पर्सनल चैनल नहीं बनाया। आई होप जब
+0:04:54 : मैं खुद का कोई पर्सनल चैनल बनाऊंगा भी ना
+0:04:56 : तो वह एक इंडियन प्लेटफार्म पे होगा और
+0:04:59 : एटलीस्ट या मैं यह कह सकता हूं एक इंडियन
+0:05:01 : प्लेटफार्म पर भी होगा। आई रियली होप कि
+0:05:04 : एक तो इंडियन सोशल मीडिया प्लेटफार्म हमको
+0:05:06 : इस साल या अगले साल की शुरुआत में मिले।
+0:05:09 : खैर यहां पर आप देख पाओगे ट्रंप ने खुद के
+0:05:10 : सोशल मीडिया प्लेटफार्म पर यह डिक्लेअर कर
+0:05:12 : दिया कि एक एग्जीक्यूटिव ऑर्डर के अंडर
+0:05:15 : चाइना को 90 डेज और दे दिए गए हैं जिसके
+0:05:18 : अंडर चाइना पर टैरे नहीं लगेंगे। चाइना पे
+0:05:21 : इस वक्त टेरेफ सस्पेंशन चल रहा है और इसका
+0:05:23 : रीजन बहुत ही सिंपल है। चाइना पे अगर
+0:05:25 : टेरेफ लगा दिए तो टोटल टैरे चाइना पे
+0:05:27 : पहुंच जाएंगे। रफ्ली आप कह लीजिए 75% इससे
+0:05:31 : यूएसए में महंगाई बहुत ज्यादा बढ़ जाएगी।
+0:05:33 : स्टॉक मार्केट गिरनी शुरू हो जाएगी। ट्रंप
+0:05:35 : की सारी कैलकुलेशन यहां पर फेल हो सकती
+0:05:38 : है। और यूएसए की हिपोक्रेसी यहां पे आप
+0:05:40 : देखिए। मैं आपको एक चार्ट दिखाता हूं। दैट
+0:05:41 : विल शॉक ऑल ऑफ यू। नाउ रशिया ऐसा नहीं है
+0:05:44 : कि सिर्फ कच्चा तेल बेचता है। अगर आपका
+0:05:46 : मेन इशू यह है ना कि रशिया से जो चीज कोई
+0:05:49 : परचेस कर रहा है उससे रशिया को देखिए काफी
+0:05:51 : फायदा होता है। फिर रशिया वही पैसा यूज़
+0:05:53 : करता है वॉर में। रशिया कोल बेचता है,
+0:05:56 : क्रूड ऑयल बेचता है, एलएनजी बेचता है,
+0:05:59 : पाइपलाइन गैस बेचता है और वेरियस ऑयल
+0:06:01 : प्रोडक्ट्स भी रशिया बेचता है। इधर यहां
+0:06:03 : पे आप देख पाओगे कोल में बाय एंड लार्ज
+0:06:06 : सबसे बड़ा बायर रशियन कोल का है चाइना।
+0:06:10 : इंडिया आई थिंक चाइना के मुकाबले 40% मिनी
+0:06:12 : होगा। फिर आप देखोगे यहां पे आपको टर्की
+0:06:14 : भी दिख जाएगा। अगर मैं ऑयल प्रोडक्ट्स की
+0:06:17 : बात करूं कि रिफाइनरी से कच्चे तेल को
+0:06:19 : प्रोसेस करके जो पेट्रोल डीजल वगैरह बनाया
+0:06:21 : जाता है उसमें टर्की सबसे बड़ा बायर है।
+0:06:23 : चाइना फिर भी यहां पे आपको आगे दिखेगा।
+0:06:25 : ब्राजील आपको दिख जाएगा और इंडिया फोर
+0:06:27 : स्पॉट पे है। फिर अगर हम बात करें क्रूड
+0:06:30 : ऑयल की सिर्फ क्रूड ऑयल की वहां पर भी
+0:06:32 : चाइना नंबर वन बायर है। इंडिया रैंक टू पे
+0:06:35 : आपको मिलेगा। अगर यहां पे आप सोच रहे हैं
+0:06:37 : कि जापान क्यों नहीं है यहां पे? क्योंकि
+0:06:39 : जापान ने बहुत ही रिसेंटली जून महीने में
+0:06:42 : रशियन कच्चा तेल परचेस करना स्टार्ट किया
+0:06:44 : था। यह जो मैं आपको डाटा दिखा रहा हूं,
+0:06:46 : दिस इज टिल दी एंड ऑफ जून 2025। तो जो
+0:06:48 : जापानीज शिपमेंट्स है, यह मोस्ट प्रोबब्ली
+0:06:50 : इनको जुलाई के आसपास मिली है। बट जापान
+0:06:52 : हैज़ आल्सो स्टार्टेड बाइंग रशियन क्रूड
+0:06:55 : ऑयल। दो साल में पहली बार ऐसा हुआ है। फिर
+0:06:56 : हम एलएनजी की बात करें वहां पे इंडिया
+0:06:59 : आपको ऑलमोस्ट नेगिजिबल दिखेगा। सबसे
+0:07:01 : ज्यादा एलएजी परचेस कर रहा है आज भी
+0:07:03 : यूरोपियन यूनियन। पाइपलाइन गैस में आपको
+0:07:06 : इंडिया दिखेगा ही नहीं। पाइपलाइन क्योंकि
+0:07:08 : रशिया इंडिया के बीच में कोई एक्सिस्ट
+0:07:10 : करती नहीं है। उसमें भी आप देखो आपको
+0:07:12 : यूरोपियन यूनियन, चाइना, टर्क, मोल्डोवा
+0:07:14 : दिखेगा। मैं आपको फिर से बोलूंगा बहुत ही
+0:07:16 : अनफेयर तरीके से भारत को टारगेट किया जा
+0:07:18 : रहा है यहां पे। इसलिए एक-एक करके भारत के
+0:07:21 : मंत्री भी डोन्ड ट्रंप को इनडायरेक्टली
+0:07:23 : टारगेट कर रहे हैं। और अगर आप मुझसे यह
+0:07:25 : सवाल पूछ रहे हैं कि रिसेंटली एयर इंडिया
+0:07:28 : ने दिल्ली वाशिंगटन की जो फ्लाइट है, यह
+0:07:30 : सस्पेंड कर दी है। इसका क्या यहां पे एंगल
+0:07:32 : है, यह भी मैं आपको समझा देता हूं। जो
+0:07:34 : फ्लाइट सस्पेंशन है उसके पीछे टेक्निकल
+0:07:36 : रीज़ंस हैं और कुछ हद तक जो पाकिस्तान ने
+0:07:38 : एयर स्पेस क्लोज कर रखा है उसकी वजह से भी
+0:07:40 : कॉस्ट का इशू है। इस वजह से सिर्फ एयर
+0:07:43 : इंडिया ने बाकी भारत की बहुत सारी
+0:07:44 : एयरलाइंस हैं वो अभी भी दिल्ली टू
+0:07:46 : वाशिंगटन की फ्लाइट्स कंडक्ट कर रही है।
+0:07:47 : तो फ्लाइट्स ऐसा नहीं है कि अभी कुछ
+0:07:49 : सस्पेंड होनी स्टार्ट हो गई है। बट आई
+0:07:52 : थिंक कहीं ना कहीं भारत को एक टफर मैसेज
+0:07:55 : भेजना होगा यूएस को। बाय द वे वैसे मैं
+0:07:57 : आपको यही बता दूं यूक्रेन सीज फायर
+0:07:59 : प्रोसेस में इतना ज्यादा इनवॉल्व है आज के
+0:08:01 : समय इंडिया कि व्लादमीर जलस्की ने भी
+0:08:04 : ट्वीट करी है इसके बारे में रिसेंटली इधर
+0:08:06 : यहां पे आप देख पाओगे जलस्की की ट्वीट है
+0:08:08 : आई हैड ए लॉन्ग कन्वर्सेशन विद प्राइम
+0:08:10 : मिनिस्टर ऑफ इंडिया नरेंद्र मोदी वी
+0:08:12 : डिस्कस्ड इन डिटेल ऑलेंट इशज़ आर बटरल
+0:08:15 : कोऑपरेशन ओवरऑल डिप्लोमेटिक सिचुएशन आई एम
+0:08:18 : ग्रेटफुल टू प्राइम मिनिस्टर फॉर ह वार्म
+0:08:20 : वर्ड्स ऑफ सपोर्ट ऑफ फॉर आवर पीपल तो आगे
+0:08:23 : देखो इन्होंने यहां पर यह भी बोला है कि
+0:08:25 : सेप्टेंबर में यूएन जनरल असेंबली के टाइम
+0:08:27 : में पीएम मोदी और जेलस्की की एक मीटिंग भी
+0:08:30 : होगी और साथ ही साथ हो सकता है कि जेलस्की
+0:08:32 : या तो भारत में आए या फिर पीएम मोदी इन द
+0:08:34 : फ्यूचर हो सकता है कि फिर से यूक्रेन को
+0:08:36 : विजिट करें और इवन दो आज के समय भारत यह
+0:08:39 : सब कर रहा है ना। आप एक बात नोट करिए आसिम
+0:08:41 : मुनीर को फिर भी दो महीनों में दो बार
+0:08:44 : यूएसए ने बुलाया है। आसिम मुनीर ने जो
+0:08:46 : कमेंट्स दी है यूएसए में खड़े होकर
+0:08:48 : अगेंस्ट इंडिया इंडिया ने उसके अगेंस्ट
+0:08:50 : प्रतिक्रिया भी दी है। मैं उस पर वीडियो
+0:08:51 : बना चुका हूं। और अब एक बात नोट करना
+0:08:54 : एक-एक करके ना यूएसए के पेंटागॉन के जो
+0:08:57 : एक्स ऑफिशियल्स हैं ये सामने आ रहे हैं
+0:08:59 : मीडिया के और यह कह रहे हैं कि आसिम मुनीर
+0:09:02 : सूट पट पहनने वाला ओसामा बिन लादेन है।
+0:09:04 : यहां पे आप देख पाओगे जो रिसेंटली जिस
+0:09:07 : टाइप की स्टेटमेंट दी है आसिम मुनीर ने इट
+0:09:09 : इज शॉकिंग। और कई अमेरिकनंस मैं सोशल
+0:09:11 : मीडिया पे देख रहा हूं। अगेन मैं फिर से
+0:09:13 : बोलूंगा अमेरिका खराब देश नहीं है। आप
+0:09:15 : देखोगे यूएसए के कई ब्लॉगर्स आज के समय
+0:09:17 : भारत का सपोर्ट कर रहे हैं। बट
+0:09:19 : अनफॉर्चुनेटली करंट यूएस गवर्नमेंट बहुत
+0:09:21 : ज्यादा इस वक्त प्रो पाकिस्तान हो चुकी
+0:09:23 : है। इन लोगों ने बलूचिस्तान लिबरेशन आर्मी
+0:09:26 : को भी एक आतंकवादी घोषित कर दिया है। इस
+0:09:28 : टॉपिक पे मैं एक अलग से वीडियो आपके लिए
+0:09:30 : लेके आऊंगा। फाइनली यहां पे आपसे वैसे मैं
+0:09:32 : एक सवाल ही पूछूंगा कि रिसेंटली सी ऑफ
+0:09:34 : गैली यह बहुत ही ज्यादा न्यूज़ में आ चुका
+0:09:36 : है क्योंकि यह जो सी है ना लाल हो चुका है
+0:09:39 : और जब भी एक आप कह लीजिए रिलीजियस लोगों
+0:09:41 : की मान्यता है जब यह सी लाल होता है तो
+0:09:43 : माना जाता है खून खराबा होता है बड़े
+0:09:45 : स्केल पर वॉर होती है तो यहां पे आपको
+0:09:47 : बताना है कि सी ऑफ गैली यह किस देश में
+0:09:50 : लोकेटेड है रिसेंटली बिल्कुल यह लाल हो
+0:09:52 : गया है बिकॉज़ ऑफ़ ए साइंटिफिक रीज़न बट यहां
+0:09:55 : पे आपको बताना है कि किस कंट्री में यह
+0:09:56 : लोकेटेड है यह है यहां पे आपकी ऑप्शंस
+0:09:59 : इजराइल रशिया
+0:10:00 : यूएस या फिर चाइना। कमेंट सेक्शन में करिए
+0:10:03 : उत्तर। जो लोग देंगे सही आंसर उनकी कमेंट
+0:10:05 : को मैं दे दूंगा हार्ड ताकि बाकी लोग समझ
+0:10:06 : पाए कि सही उत्तर क्या है। नाउ जैसे आप
+0:10:08 : लोग जानते हैं आज के समय करियर 247 स्कूल
+0:10:11 : ऑफ बैंकिंग देश भर के दिग्गज बैंक्स के
+0:10:13 : साथ मिलकर आप लोगों के लिए नौकरियों के
+0:10:16 : अवसर ला रहा है। अभी रिसेंटली ही Axis
+0:10:18 : Bank प्रोग्राम के अंडर हमने 170
+0:10:20 : एस्पिरेंट्स को नौकरी तक पहुंचाया है। आज
+0:10:23 : के समय वो लोग 6 लाख पर एनम की नौकरी की
+0:10:25 : तरफ बढ़ चुके हैं। और अब Axis Bank के
+0:10:27 : प्रोग्राम के बाद करियर 247 स्कूल ऑफ़
+0:10:29 : बैंकिंग ने पार्टनरशिप करी है Kotak के
+0:10:31 : साथ और विथ Kotak हमने स्पेसिफिकली
+0:10:34 : फ्रेशर्स के लिए एक बहुत ही इंपॉर्टेंट
+0:10:36 : करियर ऑप्शन लेके आए हैं। और यह करियर
+0:10:38 : ऑप्शन स्पेसिफिकली डिज़ है फ्रेशर्स के
+0:10:40 : लिए। आपके पास जॉब एक्सपीरियंस नहीं है।
+0:10:43 : 25 साल से कम उम्र की आयु है। दिस करियर
+0:10:46 : पाथ इज फॉर यू। आप करियर 247 स्कूल ऑफ़
+0:10:49 : बैंकिंग के थ्रू Kotak Mahindra बैंक में
+0:10:51 : एक वर्चुअल रिलेशनशिप मैनेजर बन सकते हैं।
+0:10:54 : सैलरी यहां पे आपकी होगी ₹3500 साल के। जी
+0:10:58 : हां देखिए शुरुआत में आपको जब इनिशियली जब
+0:11:01 : आपको एक्सपीरियंस गेन करना होता है। सैलरी
+0:11:03 : यूजुअली कमी होती है। धीरे-धीरे जब आप
+0:11:05 : एक्सपीरियंस गेन करेंगे इवेंचुअली आप
+0:11:08 : देखोगे अवसर खुलेंगे और यू कैन परहप्स इन
+0:11:10 : योर करियर अर्न मोर। मगर इस प्रोग्राम के
+0:11:13 : अंडर होगा क्या? 45 डेज की आपकी ट्रेनिंग
+0:11:15 : होगी। आपको एक प्रोग्राम फी पे करनी होगी
+0:11:18 : जो एक साल बाद वापस आपको रिबर्स कर दी
+0:11:21 : जाएगी अपॉन कंप्लीटिंग योर फर्स्ट ईयर विद
+0:11:23 : Kotak बैंक और जब आपकी इंटर्नशिप भी चल
+0:11:26 : रही होगी तब भी आपको ₹5000 का स्टाइपेंड
+0:11:28 : मिलेगा और साथ में जो परफॉर्मेंस इंसेंटिव
+0:11:31 : होंगे सैलरी पर वह अलग से होंगे और लोकेशन
+0:11:33 : क्या होगी जॉब की देखिए यह मुंबई ठाणे में
+0:11:36 : यहां पे जॉब आपको करनी होगी तो आप देश में
+0:11:38 : कहीं भी रहते हैं आपकी ट्रेनिंग एक बार को
+0:11:40 : ऑनलाइन हो जाएगी मगर उसके पास जॉब करने के
+0:11:43 : लिए आपको लोकेशन पे आना होगा यह एक बहुत
+0:11:45 : अच्छा अच्छा मौका है उन लोगों के लिए जो
+0:11:47 : यह सोच रहे हैं कि पहली जॉब कहां से
+0:11:49 : स्टार्ट करूं, वर्क एक्सपीरियंस कहां से
+0:11:51 : गेन करूं? आप खुद सोच सकते हैं। आपके
+0:11:53 : रिज्यूे में लिखा होगा आप Kotak Mahindra
+0:11:55 : बैंक के साथ काम कर चुके हैं। तो उसके बाद
+0:11:57 : कहीं भी आप काम ढूंढने के लिए जाएंगे।
+0:11:59 : आपको हमेशा एक एज मिलेगी। तो इस वीडियो के
+0:12:02 : कमेंट सेक्शन में जाओ। पिंड कमेंट में यह
+0:12:04 : लिंक आपको मिल जाएगा। इस लिंक पे आप जाओगे
+0:12:06 : तो यहां पे आपके सामने खुल जाएगा यह पेज
+0:12:09 : और इधर अपना नंबर आपको डालना है। आप
+0:12:11 : रजिस्टर हो जाओगे और आपका सफर यहां पे
+0:12:13 : शुरू हो जाएगा। ध्यान रखिएगा यह उन्हीं
+0:12:15 : लोगों के लिए है जिनकी ग्रेजुएशन में 50%
+0:12:18 : से ऊपर नंबर आए थे और दूसरी बात उनकी ऐज
+0:12:22 : 25 साल से कम की है। सो, गुड लक टु आल ऑफ़
+0:12:24 : यू।
