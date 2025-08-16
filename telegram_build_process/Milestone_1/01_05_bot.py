@@ -231,14 +231,6 @@ def main():
     app.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, log_all_messages), group=-1)
     app.add_handler(CallbackQueryHandler(log_all_callbacks), group=-1)
 
-
-
-
-    
-
-
-
-
     logger.info("✅ Bot is running (long polling). Press Ctrl+C to stop.")
     app.run_polling(close_loop=False)
 

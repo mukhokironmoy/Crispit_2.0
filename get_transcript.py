@@ -3,6 +3,7 @@ from youtube_transcript_api.formatters import TextFormatter
 import re
 from datetime import timedelta
 import os
+from log_handler import logger
 
 
 def get_video_id(url):
@@ -18,6 +19,7 @@ def get_video_id(url):
     match = re.search(r"(?:v=|\/)([0-9A-Za-z_-]{11})", url)
     if match:
         return match.group(1)
+    
 
     raise ValueError("Invalid YouTube URL format")
 
@@ -26,11 +28,36 @@ def format_time(seconds):
     """Convert seconds to hh:mm:ss format"""
     return str(timedelta(seconds=int(seconds)))
 
+def get_language_options(video_id):
+    ytt_api = YouTubeTranscriptApi()  # ✅ Must instantiate
+    transcript_list = ytt_api.list(video_id)
 
-def transcript(url):
+    # Show options
+    options_as_text = []
+    options = []
+    for i, transcript in enumerate(transcript_list):
+        t_type = "Auto" if transcript.is_generated else "Manual"
+        options.append(transcript)
+        options_as_text.append(f"{transcript.language} - {t_type}")
+
+    return [options, options_as_text]
+
+
+def get_transcript(url, log_data=None):
     try:
         video_id = get_video_id(url)
-        print(f"[DEBUG] Extracted Video ID: {video_id}")
+
+        #if called from outside
+        if log_data:
+            user = log_data[0]
+            chat = log_data[1]
+            msg = log_data[2]
+
+            logger.info(
+                f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | status=video id extracted"
+            )
+            # print(f"[DEBUG] Extracted Video ID: {video_id}")
+        
 
         ytt_api = YouTubeTranscriptApi()  # ✅ Must instantiate
         transcript_list = ytt_api.list(video_id)
@@ -80,4 +107,4 @@ def transcript(url):
 
 if __name__ == "__main__":
     video_url = input("📥 Paste the YouTube video URL: ").strip()
-    transcript(video_url)
+    get_transcript(video_url)
