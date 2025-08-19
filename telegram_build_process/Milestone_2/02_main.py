@@ -2,13 +2,14 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from log_handler import logger
-from get_transcript import get_transcript
+from get_transcript import get_transcript, get_video_id, get_language_options
 from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, MessageHandler, filters
 from telegram.constants import ParseMode
 from telegram.error import TelegramError
-import re
+import asyncio
+
 """-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
 # LOADING TOKEN
 load_dotenv()
@@ -79,7 +80,7 @@ def clear_state(context: ContextTypes.DEFAULT_TYPE):
     context.chat_data["state"] = STATE_NONE
 
 """-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
-# STARTUP AND /start HANDLER FUNCTION
+# HOME ROUTE
 
 # ---- callbacks (namespaced) ----
 CB_HOME_TRANSCRIPT = "home:transcript"
@@ -123,7 +124,7 @@ async def show_home(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await q.message.edit_text(welcome_text, reply_markup=markup, parse_mode=ParseMode.MARKDOWN) 
 
 """-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
-# BUTTON FUNCTIONS
+# BUTTON FUNCTIONS FOR BUTTONS FOR HOME ROUTE
 
 # return home button
 def go_back() -> InlineKeyboardMarkup:
@@ -161,7 +162,7 @@ async def help_panel(q):
     await q.message.edit_text(text, reply_markup=go_back(), parse_mode = ParseMode.MARKDOWN)
 
 """-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
-# BUTTON HANDLERS
+# BUTTON HANDLERS FOR BUTTONS FOR HOME ROUTE
 
 # handler for home page
 async def on_home_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -178,7 +179,7 @@ async def on_home_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await show_notes_prompt(q, context)
 
     elif data == CB_HOME_HELP:
-        await help_panel(q, context)
+        await help_panel(q)
 
     else:
         await q.message.reply_text("🤔 I didn’t recognize that action.")
@@ -191,6 +192,150 @@ async def go_back_buttons(update:Update, context: ContextTypes.DEFAULT_TYPE):
 
     if q.data == CB_NAV_HOME:
         await show_home(update, context)
+
+"""-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
+# TRANSCRIPT ROUTE
+
+# create keyboard for transcript options
+def build_transcript_options_keyboard(labels: list[str]) -> InlineKeyboardMarkup:
+    rows = []
+
+    for i, label in enumerate(labels):
+        rows.append([InlineKeyboardButton(label, callback_data=f"tr:pick:{i}")])
+    
+    rows.append([InlineKeyboardButton("⬅️ Go back", callback_data = CB_NAV_HOME)])
+
+    return InlineKeyboardMarkup(rows)
+
+# create keyboard for post transcript options
+def build_post_transcript_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("🧠 Make notes from this transcript", callback_data="notes:from_tr")],
+        [InlineKeyboardButton("⬅️ Home", callback_data=CB_NAV_HOME)]
+    ])
+
+JOB_SEMAPHORE = asyncio.Semaphore(4)  # max 4 heavy jobs at once
+
+async def process_transcript_job(context, q, options, idx, user, chat):
+    async with JOB_SEMAPHORE:
+        try:
+            file_path = await asyncio.to_thread(get_transcript, options, idx, user=user, chat=chat)
+            context.chat_data["last_transcript_file"] = file_path
+            logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | Transcript saved at: {file_path}")
+
+
+            try:
+                with open(file_path, "rb") as f:
+                    await q.message.reply_document(
+                        document = f,
+                        filename = "Transcript.txt",
+                        caption = "📄 Your transcript is ready."
+                    )
+
+            except Exception as e:
+                logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | Sending transcript file failed", exc_info=e)
+                await q.message.reply_text("⚠️ I generated the file but couldn’t send it.")
+
+            # offer next steps
+            await q.message.reply_text(
+                "What next?",
+                reply_markup=build_post_transcript_keyboard()
+            )
+
+        except Exception as e:
+            logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | Transcript job failed", exc_info=e)
+            await q.message.reply_text("❌ Sorry, transcript failed.")
+
+
+# handler for transcript options
+async def on_transcript_options_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    user = update.effective_user
+    chat = update.effective_chat
+
+    await q.answer()
+
+    data = q.data
+
+    # check if the button callback is for transcript option picking
+    if data.startswith("tr:pick:"):
+        try:
+            idx = int(data.split(":")[-1]) # find the index of the chosen label
+        except ValueError:
+            await q.answer("Invalid option.", show_alert=True) # show popup if you press a wrong option
+            return
+
+    # get the options from context 
+    options = context.chat_data.get("tr_options", [])
+    labels = context.chat_data.get("tr_option_labels", [])
+
+    if not options or idx<0 or idx>=len(options):
+        await q.answer("That option is no longer available.", show_alert=True)  # show popup if you press a wrong option
+        logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | Invalid option chosen by user")
+        return
+    
+    # store the chosen label
+    chosen_label = labels[idx]
+    context.chat_data["tr_choice_idx"] = idx
+    logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | User chose transcript option : {chosen_label}")
+
+
+    # # give status update response
+    # await q.message.edit_text(f"✅ Selected transcript: {chosen_label}.\n⏳ Generating transcript file...")
+
+    # generate transcript and get output file path
+    try:
+        # give status update response
+        await q.message.edit_text(f"✅ Selected transcript: {chosen_label}.\n⏳ Working on your transcript, this may take a few seconds…")
+        
+        # let the heavy work run in background
+        asyncio.create_task(process_transcript_job(context, q, options, idx, user, chat))
+
+    except Exception as e:
+        logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | Transcript generation failed | \n\n", exc_info=e)
+        await q.message.edit_text(
+            "❌ Sorry, I couldn’t generate the transcript.",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("⬅️ Home", callback_data=CB_NAV_HOME)]])
+        )
+        return
+    
+    # # send the output file as a document
+    # try:
+    #     with open(file_path, "rb") as f:
+    #         await q.message.reply_document(
+    #             document = f,
+    #             filename = "Transcript.txt",
+    #             caption = "📄 Your transcript is ready."
+    #         )
+
+    # except Exception as e:
+    #     logger.error("Sending transcript file failed", exc_info=e)
+    #     await q.message.reply_text("⚠️ I generated the file but couldn’t send it.")
+
+    # # offer next steps
+    # await q.message.reply_text(
+    #     "What next?",
+    #     reply_markup=build_post_transcript_keyboard()
+    # )
+
+"""-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
+# NOTES ROUTE
+
+# sample handler for notes button
+async def on_notes_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    await q.answer()
+
+    if q.data == "notes:from_tr":
+        file_path = context.chat_data.get("last_transcript_file")
+        if not file_path:
+            await q.answer("No transcript file found in this chat.", show_alert=True)
+            return
+
+        await q.message.edit_text(
+            "🧠 Notes generation will use the transcript you just received. (Coming up next!)",
+            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("⬅️ Home", callback_data=CB_NAV_HOME)]])
+        )
 
 """-----------------------------------------------------------------------------------------------------------------------------------------------------------------"""
 # COMMANDS
@@ -248,20 +393,63 @@ async def receive_text(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text = update.message.text.strip()
         state = get_state(context)
 
-        # Awaiting transcript link
-        if state == STATE_AWAIT_TRANSCRIPT_URL:            
+        # AWAITING TRANSCRIPT LINK
+        if state == STATE_AWAIT_TRANSCRIPT_URL: 
+
+            logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | User in Transcript Route")
+
             url = text
+
+            logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | Received url from user : {url}")
 
             # Placeholder: store somewhere if you like
             context.chat_data["last_transcript_url"] = url
 
-            # Confirm 
-            await update.message.reply_text(f"✅ Got the link for transcript : {url}")
+            # Parse video_id
+            try:
+                video_id = await asyncio.to_thread(get_video_id,url)
+                logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | Video id extracted : {video_id}")
+
+            except Exception as e:
+                logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | User sent invalid Youtube URL")
+                await update.message.reply_text("⚠️ That doesn’t look like a valid YouTube link. Please send a proper URL.")
+                return
+            
+            # Get available transcript options
+            try:
+                options, labels = await asyncio.to_thread(get_language_options,video_id)
+                logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | Transcript options extracted.")
+
+            except Exception as e:
+                logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | Error in fetching transcript options for URL.")
+                await update.message.reply_text("⚠️ I couldn’t fetch transcript options for that video.")
+                clear_state(context)
+                await show_home(update, context)
+                return
+            
+            if not options:
+                logger.info(f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | No transcripts available for provided url.")
+                await update.message.reply_text("⚠️ No transcripts are available for this video.")
+                clear_state(context)
+                await show_home(update, context)
+                return
+            
+            # Cache options for the selection step
+            context.chat_data["tr_video_id"] = video_id
+            context.chat_data["tr_options"] = options
+            context.chat_data["tr_option_labels"] = labels
+
+            # Offer choices as inline buttons
+            await update.message.reply_text(
+                "🔎 Choose which transcript to use:",
+                reply_markup=build_transcript_options_keyboard(labels)
+            )
+
+            # We can clear the text-waiting state; selection now happens via buttons
             clear_state(context)
-            await show_home(update, context)
             return
-        
-        # Awaiting notes link
+
+        # AWAITING NOTES LINK
         if state == STATE_AWAIT_NOTES_URL:            
             url = text
 
@@ -302,8 +490,10 @@ async def on_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # error handler function
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    chat = update.effective_chat
     """Log the error and send a message to yourself if needed."""
-    logger.error("Exception while handling an update:", exc_info=context.error)
+    logger.error(f"⚠️ ERROR | user_id={user.id} username={user.username} | chat_id={chat.id} | Exception while handling an update:", exc_info=context.error)
 
     # You can also notify the user something went wrong
     if update and hasattr(update, "effective_message") and update.effective_message:
@@ -317,7 +507,7 @@ def main():
     if not BOT_TOKEN:
         raise RuntimeError("telegram_token is missing. Check .env and that your venv is active.")
 
-    app = Application.builder().token(BOT_TOKEN).build()
+    app = Application.builder().token(BOT_TOKEN).concurrent_updates(True).build()
 
     # log handlers
     app.add_handler(MessageHandler(filters.COMMAND, log_all_commands), group=-1)
@@ -333,6 +523,10 @@ def main():
     # button handlers
     app.add_handler(CallbackQueryHandler(on_home_buttons, pattern=r"^home:"))
     app.add_handler(CallbackQueryHandler(go_back_buttons, pattern=r"^nav:"))
+    app.add_handler(CallbackQueryHandler(on_transcript_options_buttons, pattern=r"^tr:"))
+    app.add_handler(CallbackQueryHandler(on_notes_buttons, pattern=r"^notes:"))
+
+
 
     # error handlers
     app.add_error_handler(error_handler)

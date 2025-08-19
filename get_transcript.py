@@ -1,9 +1,10 @@
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 import re
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 from log_handler import logger
+from pathlib import Path
 
 
 def get_video_id(url):
@@ -40,71 +41,46 @@ def get_language_options(video_id):
         options.append(transcript)
         options_as_text.append(f"{transcript.language} - {t_type}")
 
-    return [options, options_as_text]
+    return options, options_as_text
 
 
-def get_transcript(url, log_data=None):
+def get_transcript(options, selected_idx, out_dir="telegram_out_data", user=None, chat=None):
     try:
-        video_id = get_video_id(url)
-
-        #if called from outside
-        if log_data:
-            user = log_data[0]
-            chat = log_data[1]
-            msg = log_data[2]
-
-            logger.info(
-                f"DEBUG | user_id={user.id} username={user.username} | chat_id={chat.id} | status=video id extracted"
-            )
-            # print(f"[DEBUG] Extracted Video ID: {video_id}")
-        
-
-        ytt_api = YouTubeTranscriptApi()  # ✅ Must instantiate
-        transcript_list = ytt_api.list(video_id)
-
-        # Show options
-        options = []
-        for i, transcript in enumerate(transcript_list):
-            t_type = "Auto" if transcript.is_generated else "Manual"
-            print(f"{i + 1}. {transcript.language} ({t_type})")
-            options.append(transcript)
-
-        # Let user choose
-        choice = int(input("Pick one: "))
-        selected = options[choice - 1]
+        selected_transcript = options[selected_idx]
 
         # Fetch it
-        transcript_data = selected.fetch()
+        transcript_data = selected_transcript.fetch()
 
+        # Ensure folder exists
+        out_path = Path(out_dir)
+        out_path.mkdir(parents=True, exist_ok=True)
+        basename = None
 
-        # # Try manually created transcript first
-        # try:
-        #     transcript_obj = transcript_list.find_manually_created_transcript(['en'])
-        #     print("[INFO] Using manually created English transcript.")
-        # except:
-        #     # Fall back to auto-generated english
-        #     transcript_obj = transcript_list.find_generated_transcript(['en'])
-        #     print("[INFO] Using auto-generated English transcript.")
+        # Build a readable, unique filename
+        # lang_code = getattr(selected_transcript, "language_code", None) or getattr(selected_transcript, "language", "xx")
+        base = basename or f"{user.id}_transcript"
+        file_path = out_path / f"{base}.txt"
 
-
-
-
-        # Make sure 'data' directory exists
-        os.makedirs("data", exist_ok=True)
-
-        with open("data/transcript.txt", 'w', encoding='utf-8') as f:
+        # write transcript to file
+        with file_path.open('w', encoding='utf-8', newline="\n") as f:
             for entry in transcript_data:
                 formatted_time = format_time(entry.start)  # ✅ Use dot notation
                 text = entry.text                          # ✅ Use dot notation
                 f.write(f"{formatted_time} : {text}\n")
 
-
-        print("✅ Transcript saved to data/transcript.txt")
+        # return file path
+        return str(file_path)
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        raise ValueError(f"Error occured : {e}")
 
 
 if __name__ == "__main__":
     video_url = input("📥 Paste the YouTube video URL: ").strip()
-    get_transcript(video_url)
+    video_id = get_video_id(video_url)
+    options, options_as_text = get_language_options(video_id)
+    choice = int(input("Pick one: "))
+    get_transcript(options, choice)
+
+
+
