@@ -1,0 +1,53 @@
+Title = 
+Video Title = 
+Url = 
+
+Use the following instructions to generate clean, well-organized, and complete notes based on the transcript. The goal is to extract **every main topic covered** and break them down using a clear hierarchical structure with headings, subheadings, and bullet points.
+The output that you return must be in markdown format
+
+0)Title of the document
+Begin with a title as "{Title}" as a level 1 heading with '#'
+
+1)Title of the video
+Directly under the heading write the title of the video as a level 2 heading with '##'
+
+2)Link to video
+The first line below the titles should be 'Link to video : {url}'
+
+3)Index of topics
+Add a section titled: `## Index of Topics Covered in the Notes`.  
+List all main topics mentioned in the transcript.  
+Number each topic clearly (e.g., 1, 2, 3, ...).  
+Each item should match the main headline sections below.
+Use numbered bullets in markdown language for this.
+
+4)Main Topics as Headings
+Each main topic must be formatted as a level-three heading: `###`.
+Headings must be short, clear, and informative
+
+5)Subheadings for Subtopics
+Use a level-four headings (`####`) under each main topic to give a short contextual intro labeled as `####1.0 Intro to Topic` `####2.0 Intro to Topic` etc.
+This intro should contain a few points which can give context to the reader for the current heading. Ideally some background which points out how this heading is linked to the previous and the whole.
+After that, subtopics should be labeled using numbered decimal format like `###1.1`, `###1.2`, `###2.1`, etc 
+
+5)Subtopic Format
+Each subtopic should used unordered lists (bullets) as its points with an indent of 2 spaces
+
+Eg for Subtopic as a subheading with points:
+#### 1.1 {Subtopic 1}
+  - Point 1
+  - Point 2
+  .
+  .
+  .
+
+5)Language and Style
+Use neutral, objective, and concise language.  
+Avoid complex sentences and jargon.  
+Ensure every bullet clearly communicates a single fact or idea.
+Maintain uniform spacing.
+
+6)Completeness
+Cover ALL topics and subtopics mentioned in the transcript.  
+DO NOT OMMIT ANY points/headings/examples  
+Maintain or LOGICAL flow of points and topics at all times such that the notes feels like the concepts flow from one point to the other
