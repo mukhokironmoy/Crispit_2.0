@@ -1,0 +1,236 @@
+0:00:00 : I just hacked into my Airbnb's Wi-Fi
+0:00:02 : using this DIY hacking tool that I built
+0:00:05 : myself. And in this video, I'm going to
+0:00:07 : show you how. Before we do that though,
+0:00:09 : let's rewind and see how I got here. I'm
+0:00:12 : in the middle of a move right now and my
+0:00:14 : new place isn't ready. So, I'm staying
+0:00:16 : at an Airbnb for a little while. I got
+0:00:18 : there today, checked in. Everything was
+0:00:20 : all good except for the guest book
+0:00:23 : that's supposed to have the Wi-Fi
+0:00:25 : password was missing. Now, I just went
+0:00:26 : out to run some errands and I sent a
+0:00:28 : message to the host asking if I could
+0:00:30 : just get the Wi-Fi password and she said
+0:00:33 : uh what did she say? She said that
+0:00:35 : unfortunately she forgot it. She's not
+0:00:38 : very good with technology. I I think
+0:00:40 : it's an older lady and the router is
+0:00:44 : apparently locked in her office with the
+0:00:46 : rest of the details for that. So, she
+0:00:49 : says she could be back in a few days uh
+0:00:51 : to get into there and we could reset the
+0:00:53 : router. Gets the password. However, I
+0:00:55 : mentioned I was in cyber security and if
+0:00:58 : she wanted, I could probably hack into
+0:01:00 : the network and try and recover the
+0:01:03 : password, which she said, "Yeah, go for
+0:01:04 : it." She gave me permission to do that.
+0:01:06 : So, I'm going to take a shot at it. I
+0:01:08 : don't really have many of my tools here
+0:01:10 : except for I think I have my ESP32
+0:01:12 : Marauder that I'm going to see if I can
+0:01:15 : actually capture the handshake and take
+0:01:17 : it and crack it. So, if you're seeing
+0:01:20 : this video, it means I probably was able
+0:01:22 : to get in, but I wanted to record this
+0:01:24 : and take you guys along for the journey
+0:01:26 : just to show how it works. A few months
+0:01:29 : back, I actually recorded a video on how
+0:01:31 : you can build your own ESP32 Marauder
+0:01:34 : just like this one. So, if you haven't
+0:01:36 : built one yet and you want to, I will
+0:01:38 : drop a link to that video in the
+0:01:40 : description down below. In this video,
+0:01:42 : we're going to take a look at how we can
+0:01:44 : use the ESP32 Marauder to perform a
+0:01:48 : deoff attack and knock some of the
+0:01:50 : devices off of the network and then
+0:01:52 : actually be able to capture the four-way
+0:01:55 : handshake that takes place with WPA2.
+0:01:58 : And then we'll take that off of the
+0:02:00 : device and onto our computer and take a
+0:02:02 : look and see if we can actually crack
+0:02:04 : that and recover the Wi-Fi password. So,
+0:02:07 : let's get started on the ESP32 Marauder
+0:02:10 : itself. After powering on the Marauder,
+0:02:12 : the first thing we'll need to do is
+0:02:13 : actually go into the device settings and
+0:02:15 : make sure we have it set up properly to
+0:02:17 : be able to capture the handshake that we
+0:02:20 : need. So, we'll go into settings here.
+0:02:22 : And then mine's already set, but you'll
+0:02:24 : need to make sure you have this force
+0:02:26 : PMK ID set if you want to be able to
+0:02:30 : deauthenticate devices off the network.
+0:02:34 : So, what this means is that when we are
+0:02:36 : actually performing the scan for the
+0:02:38 : four-way handshake, this is actually
+0:02:40 : only going to take place when a device
+0:02:42 : actually connects to the network. Now,
+0:02:45 : if we want to be really passive and not
+0:02:47 : knock any devices off, then we can just
+0:02:50 : sit and wait for that to happen.
+0:02:52 : However, in my case at this Airbnb,
+0:02:54 : there is probably very few, if any,
+0:02:57 : devices that are going to be connecting.
+0:02:59 : Now, I did see a couple smart cameras
+0:03:01 : and I think they have a smart TV. So,
+0:03:04 : there are some devices that we could
+0:03:05 : probably kick off. So, I'm going to use
+0:03:07 : this force PMK ID option. Now, one thing
+0:03:11 : to keep in mind is that you should only
+0:03:13 : be doing this on networks that you
+0:03:15 : actually have permission to. This can be
+0:03:17 : highly illegal otherwise because you're
+0:03:20 : essentially jamming the network and
+0:03:22 : knocking devices off of it. So, now that
+0:03:24 : I have that set, I'm going to go back
+0:03:26 : here. And then we'll go back to the main
+0:03:30 : page here, and we're going to go into
+0:03:31 : Wi-Fi.
+0:03:33 : So, first off, I'm going to do a quick
+0:03:34 : scan for access points here just to make
+0:03:36 : sure. And I can already see the one that
+0:03:38 : I want coming up. So, that's just to
+0:03:40 : make sure that we are in range of it.
+0:03:42 : And then the next thing we'll do is this
+0:03:45 : EAP/ PMK ID scan. This is a protocol
+0:03:50 : that's used for that four-way handshake.
+0:03:52 : and we can click on it here. And then
+0:03:55 : you may need to specify which channel
+0:03:58 : you want to run this on. I know from
+0:04:00 : some experimentation that is on channel
+0:04:01 : 3. It's a little bit hard to see, but
+0:04:04 : down here we have a blue line that is
+0:04:06 : showing the amount of EAP
+0:04:09 : packets that are actually seen. So right
+0:04:12 : now we are at zero. And what we need is
+0:04:14 : for a device to actually authenticate to
+0:04:17 : this network so we can see a spike and
+0:04:19 : pick it up. and then we'll know we
+0:04:21 : actually have that handshake going.
+0:04:23 : Perfect. It looks like we just had a
+0:04:25 : device try and connect, probably one
+0:04:27 : that was kicked off from those de. So,
+0:04:30 : at this point, we've got the handshake
+0:04:32 : captured and we can now try and take
+0:04:33 : this offline and go and crack it. Now we
+0:04:36 : can power off our Marauder and then we
+0:04:39 : can take the SD card out and we'll pop
+0:04:41 : it into my laptop here so we can recover
+0:04:45 : the pcap file that has all of the
+0:04:47 : network details and hopefully contains
+0:04:48 : that four-way handshake. The file we're
+0:04:51 : looking for here is the EAP_0.pcap.
+0:04:55 : This is the default file name that
+0:04:57 : Marauder uses. And that EAP is actually
+0:05:01 : the protocol that's used during that
+0:05:03 : four-way handshake. It stands for
+0:05:05 : extensible authentication protocol over
+0:05:08 : LAN. There's a few different tools that
+0:05:10 : we could go and use to try and crack the
+0:05:12 : four-way handshakes and recover the
+0:05:15 : password. So, one popular one is air
+0:05:17 : crackng, which can actually just
+0:05:19 : directly take in this pcap file and then
+0:05:23 : run some hash cracking on it to attempt
+0:05:25 : to recover the password. However, I much
+0:05:28 : prefer to use hashcat because I find it
+0:05:30 : to be faster and a lot more flexible. In
+0:05:33 : order for us to use Hashcat, though,
+0:05:35 : we're going to need a way to actually
+0:05:36 : extract out the four-way handshakes in a
+0:05:39 : way that Hashcat can recognize and crack
+0:05:41 : them. Luckily, there is a great tool
+0:05:44 : that is actually hosted by hashcats.net
+0:05:47 : online that can automatically convert
+0:05:49 : these and extract out those four-way
+0:05:51 : handshakes. So, the tool is cap to
+0:05:54 : hashcat, and it's as easy as we just
+0:05:56 : need to choose a file. So, for me, I am
+0:05:58 : going to choose the one that we just
+0:06:00 : talked about that we recovered. And then
+0:06:02 : we can just click convert. And then it
+0:06:05 : will actually attempt to extract those
+0:06:07 : four-way handshakes out for us. Perfect.
+0:06:10 : So, we were able to actually extract it
+0:06:12 : here. And now we can just go ahead and
+0:06:14 : download this and then run hashcat
+0:06:16 : against it. So, we'll click download
+0:06:18 : here. And then I'm going to actually
+0:06:20 : save mine into my hashcat folder because
+0:06:22 : I find it a lot easier to do it that
+0:06:24 : way. I've got my hash saved here. I just
+0:06:27 : saved it as this Airbnb.Hc22000.
+0:06:32 : That's the format for hashcats to be
+0:06:34 : able to crack these. And the next thing
+0:06:36 : we'll need is actually a word list to go
+0:06:39 : ahead and try and crack this against.
+0:06:41 : Now, I actually got a huge tip by asking
+0:06:45 : the host of the Airbnb if they
+0:06:47 : remembered anything about their Wi-Fi
+0:06:50 : password, and they mentioned to me that
+0:06:52 : they thought that it actually contained
+0:06:55 : the name of the neighborhood that I'm
+0:06:57 : staying in, which is referred to usually
+0:06:59 : as Old South or Wartley. So what I've
+0:07:01 : done is I've actually created just a
+0:07:03 : very small word list here. So if we just
+0:07:05 : actually cat this out. I've got this
+0:07:08 : word list
+0:07:11 : and you'll see I just have old south and
+0:07:14 : wartly in here. Now I already tried uh
+0:07:16 : these two passwords and they didn't
+0:07:18 : contain it. So what I'm going to do is
+0:07:20 : actually run these through hashcat with
+0:07:22 : a rule called one rule to rule them all.
+0:07:26 : And what this is going to do is it's
+0:07:28 : actually going to do things like append
+0:07:30 : numbers or add them at the end or front
+0:07:34 : or add capitals or do lead to these
+0:07:38 : words to actually generate a whole bunch
+0:07:40 : of different combinations. And hopefully
+0:07:42 : one of those is actually going to give
+0:07:44 : us a hit and allow us to recover this
+0:07:46 : password. The command to run this is
+0:07:48 : hashcats.exe.
+0:07:50 : And for any of you Linux lovers
+0:07:52 : wondering why I'm on Windows, it's
+0:07:54 : because this is going to make it a lot
+0:07:55 : easier for it to get access to my GPU
+0:07:58 : and run faster. Then we need to pass in
+0:08:01 : the mode, which is the type of hash that
+0:08:03 : we're trying to crack with the - flag,
+0:08:06 : which for us is 22,000. We then need the
+0:08:09 : name of that hash file, the name of our
+0:08:12 : world list, and then with - r, we're
+0:08:14 : specifying to also use this one rule to
+0:08:17 : rule them all rule. So, let's kick this
+0:08:20 : off. We'll let it get started,
+0:08:22 : initialize, and then start running. And
+0:08:25 : even with this just small word list, uh,
+0:08:28 : using the one rule to rule them all,
+0:08:30 : this is actually going to take a little
+0:08:32 : while to run. So, we can take a look at
+0:08:34 : the status here. And we're barely just
+0:08:37 : in. And it is running through. We will
+0:08:39 : give it some time. It looks like it's
+0:08:41 : going to take about 10 minutes. So, I'm
+0:08:43 : going to go grab myself a beverage and
+0:08:45 : I'll come back here and we'll see if we
+0:08:46 : were able to crack it.
+0:08:51 : Ah, looks like we are in. And the
+0:08:53 : password was Old South 1952. I'm
+0:08:57 : guessing that's maybe going to be the
+0:08:59 : birth year of this Airbnb host. So,
+0:09:02 : thanks for following along and I hope
+0:09:05 : you learned something from this video.
+0:09:07 : If you want to learn more about ethical
+0:09:09 : hacking, password cracking, and all
+0:09:12 : things cyber security, then make sure to
+0:09:14 : check out our courses on the TCM
+0:09:17 : Security Academy. I'll drop a link to
+0:09:19 : that down below. and have yourself a
+0:09:21 : great

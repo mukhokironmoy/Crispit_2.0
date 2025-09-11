@@ -1,0 +1,116 @@
+# Test Notes
+## How I Hacked My AirBnB's Wi-Fi: A Tutorial
+Link to video : https://www.youtube.com/watch?v=FVvhJxAC-Ic
+
+## Index of Topics Covered in the Notes
+1. Background and Motivation
+2. Building and Setup of ESP32 Marauder
+3. Capturing the Wi-Fi Handshake
+4. Extracting and Converting the Handshake File
+5. Cracking the Password with Hashcat
+
+### 1. Background and Motivation
+#### 1.0 Intro to Topic
+This section outlines the context and motivation for attempting to hack into the Airbnb's Wi-Fi. It details the initial problem and the host's permission, setting the stage for the technical process that follows.
+
+#### 1.1 The Wi-Fi Problem
+  - Guest book with Wi-Fi password was missing at Airbnb.
+  - Host stated she forgot the password and wasn't tech-savvy.
+  - Router and details were locked in her office, with her return expected in a few days.
+
+#### 1.2 Permission to Hack
+  - Host granted permission to attempt to recover the password, acknowledging the presenter's cybersecurity background.
+  - This permission is crucial for ethical hacking practices.
+
+#### 1.3 Tools Available
+  - Limited tools on hand due to being in the middle of a move.
+  - The primary tool available was an ESP32 Marauder.
+
+### 2. Building and Setup of ESP32 Marauder
+#### 2.0 Intro to Topic
+This section provides an overview of the ESP32 Marauder, a DIY hacking tool. It includes instructions for building it and details the necessary settings adjustments to prepare the device for capturing the Wi-Fi handshake, emphasizing ethical considerations.
+
+#### 2.1 Building the ESP32 Marauder
+  - A previous video covers how to build an ESP32 Marauder.
+  - Link to the building tutorial video is available in the description.
+
+#### 2.2 Initial Device Settings
+  - Power on the Marauder.
+  - Navigate to the device settings.
+  - Ensure "Force PMK ID" is set.
+
+#### 2.3 Understanding "Force PMK ID"
+  - This setting enables deauthentication attacks.
+  - It forces devices off the network to capture the four-way handshake upon reconnection.
+  - Necessary in scenarios with few active device connections, like the Airbnb.
+
+#### 2.4 Ethical Considerations for Deauthentication
+  - Deauthentication attacks are akin to jamming a network.
+  - Performing this without explicit permission can be highly illegal.
+  - Emphasized that this action was performed with the host's consent.
+
+### 3. Capturing the Wi-Fi Handshake
+#### 3.0 Intro to Topic
+This section details the practical steps involved in using the ESP32 Marauder to capture the four-way handshake. It covers scanning for access points, initiating the PMK ID scan, and confirming the successful capture of the handshake.
+
+#### 3.1 Initial Wi-Fi Scan
+  - From the main page, navigate to "Wi-Fi".
+  - Perform a quick scan for access points to confirm the target network is in range.
+
+#### 3.2 Initiating EAP/PMK ID Scan
+  - Select "EAP/PMK ID scan".
+  - Specify the correct Wi-Fi channel (in this case, channel 3).
+  - The blue line on the display indicates the number of EAP packets seen.
+
+#### 3.3 Capturing the Handshake
+  - The goal is to observe a spike in EAP packets, indicating a device attempting to authenticate.
+  - Deauthenticating devices (via "Force PMK ID") causes them to reconnect, facilitating handshake capture.
+  - A successful spike indicated the handshake was captured.
+
+### 4. Extracting and Converting the Handshake File
+#### 4.0 Intro to Topic
+This section explains how to retrieve the captured handshake data from the ESP32 Marauder and prepare it for password cracking. It covers locating the specific file on the SD card and using an online tool to convert it into a Hashcat-compatible format.
+
+#### 4.1 Recovering the pcap File
+  - Power off the Marauder.
+  - Remove the SD card and insert it into a computer.
+  - Locate the file `EAP_0.pcap`, which contains the network details and handshake.
+  - `EAP` stands for Extensible Authentication Protocol over LAN, used in the four-way handshake.
+
+#### 4.2 Choosing a Cracking Tool
+  - `Aircrack-ng` can directly process pcap files for cracking.
+  - `Hashcat` is preferred for its speed and flexibility.
+
+#### 4.3 Converting pcap for Hashcat
+  - Use `cap2hashcat`, an online tool hosted by hashcats.net.
+  - Upload the `EAP_0.pcap` file.
+  - Click "Convert" to extract the four-way handshakes.
+  - Download the converted hash file (e.g., `Airbnb.Hc22000`) in Hashcat's format (mode 22000).
+
+### 5. Cracking the Password with Hashcat
+#### 5.0 Intro to Topic
+This section details the final stage of the process: using Hashcat to crack the Wi-Fi password. It explains how to leverage a custom wordlist and advanced rules to efficiently test password combinations, culminating in the successful recovery of the password.
+
+#### 5.1 Obtaining Password Hints
+  - The Airbnb host provided a hint: the password might contain the neighborhood name (Old South or Wartley).
+
+#### 5.2 Creating a Custom Wordlist
+  - A small wordlist was created containing "old south" and "wartly."
+
+#### 5.3 Using the "One Rule to Rule Them All"
+  - This rule generates many password variations (e.g., appending numbers, adding capitals, leetspeak) from a small wordlist.
+  - This greatly expands the cracking potential without needing a massive initial wordlist.
+
+#### 5.4 Running Hashcat
+  - Command: `hashcat.exe -m 22000 [hash_file] [wordlist_file] -r [rule_file]`
+  - `-m 22000`: Specifies the hash mode for WPA2.
+  - Hashcat was run on Windows for GPU acceleration, leading to faster cracking.
+  - The cracking process took approximately 10 minutes.
+
+#### 5.5 Password Recovery
+  - The password was successfully recovered: "Old South 1952".
+  - Speculated that "1952" might be the host's birth year.
+
+#### 5.6 Further Learning
+  - Recommended resources for learning more about ethical hacking, password cracking, and cybersecurity.
+  - Encouraged checking out courses on the TCM Security Academy (link provided).

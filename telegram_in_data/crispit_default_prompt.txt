@@ -1,7 +1,3 @@
-Title = 
-Video Title = 
-Url = 
-
 Use the following instructions to generate clean, well-organized, and complete notes based on the transcript. The goal is to extract **every main topic covered** and break them down using a clear hierarchical structure with headings, subheadings, and bullet points.
 The output that you return must be in markdown format
 

@@ -5,6 +5,14 @@ from datetime import timedelta, datetime
 import os
 from log_handler import logger
 from pathlib import Path
+from youtube_data import get_yt_data
+
+import re
+
+def safe_filename(name: str) -> str:
+    # Replace invalid Windows filename characters with underscore
+    return re.sub(r'[<>:"/\\|?*]', '_', name)
+
 
 
 def get_video_id(url):
@@ -44,7 +52,7 @@ def get_language_options(video_id):
     return options, options_as_text
 
 
-def get_transcript(options, selected_idx, out_dir="telegram_out_data", user=None, chat=None):
+def get_transcript(title, options, selected_idx, out_dir="telegram_out_data", user=None, chat=None):
     try:
         selected_transcript = options[selected_idx]
 
@@ -52,13 +60,20 @@ def get_transcript(options, selected_idx, out_dir="telegram_out_data", user=None
         transcript_data = selected_transcript.fetch()
 
         # Ensure folder exists
-        out_path = Path(out_dir)
+        if user:
+            out_path = Path(out_dir) / str(user.id)
+        else:
+            out_path = Path(out_dir) / "test_run"
         out_path.mkdir(parents=True, exist_ok=True)
-        basename = None
+
+        title = safe_filename(title)
 
         # Build a readable, unique filename
         # lang_code = getattr(selected_transcript, "language_code", None) or getattr(selected_transcript, "language", "xx")
-        base = basename or f"{user.id}_transcript"
+        if not user:
+            base = f"test_transcript"
+        else : 
+            base = f"transcript_{title}"
         file_path = out_path / f"{base}.txt"
 
         # write transcript to file
@@ -77,10 +92,17 @@ def get_transcript(options, selected_idx, out_dir="telegram_out_data", user=None
 
 if __name__ == "__main__":
     video_url = input("📥 Paste the YouTube video URL: ").strip()
+    yt_data = get_yt_data(video_url)
+    title = yt_data["Title"]
     video_id = get_video_id(video_url)
     options, options_as_text = get_language_options(video_id)
+
+    print("\nAvailable transcripts:")
+    for i, label in enumerate(options_as_text):
+        print(f"{i}: {label}")   # show index and label
+
     choice = int(input("Pick one: "))
-    get_transcript(options, choice)
+    get_transcript(title, options, choice)
 
 
 
