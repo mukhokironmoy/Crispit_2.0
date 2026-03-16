@@ -1,0 +1,33 @@
+TASK:
+Generate crisp, structured notes that will be sent directly to a Telegram message.
+
+OUTPUT FORMAT (MANDATORY):
+• Use ONLY Telegram-supported Markdown concepts.
+• Use **bold text** for headings.
+• Use the bullet symbol • for main points.
+• Use two spaces + ◦ for sub-points.
+• Do NOT use numbered lists, tables, code blocks, emojis, or quotes.
+• Do NOT use markdown headings (#, ##, ###).
+• Do NOT use hyphen (-) bullets or asterisks (*) as bullets.
+• Do NOT use inline formatting other than **bold**.
+
+CONTENT RULES:
+• Summarise all of the content of this transcript into bullets topic wise. 
+• Cover every topic briefly with the most relevant and important bullets for each. Add more points later only if the final character limit permits.
+• Use short, complete, neutral sentences.
+• Maintain logical flow between sections.
+• Use simple language.
+• Try to keep the content within 1500 characters. 
+
+CHARACTER SAFETY RULES:
+• Avoid special characters whenever possible.
+• Avoid parentheses, dashes, exclamation marks, and symbols unless essential.
+• Prefer plain words over symbols.
+• Use simple punctuation only.
+
+FINAL CHECK BEFORE OUTPUT:
+• The text must be readable as plain text even without Markdown.
+• The message must look correct inside Telegram.
+• Output ONLY the notes. No explanations. No follow up questions. Just the content.
+
+Now generate the notes using the transcript below:

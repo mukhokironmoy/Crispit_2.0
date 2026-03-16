@@ -1,40 +1,58 @@
-# Crispit Telegram Bot
-
-## Setup
-
-1.  Clone the repo
-
-2.  Create a virtual environment:
-
-    ```bash
-    python -m venv .venv
-    source .venv/bin/activate  # on Linux/Mac
-    .venv\Scripts\activate      # on Windows
-    ```
-
-3.  Install dependencies:
-
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-4.  Create a `.env` file in the root with:
-
-    ```
-    telegram_token=YOUR_TELEGRAM_BOT_TOKEN
-    GEMINI_API_KEY=YOUR_GEMINI_KEY
-    ```
-
-5.  Run the bot:
-
-    ```bash
-    python run.py
-    ```
-
-## Project Structure
-
-- `bot_modules/core` → App setup, state, logging
-- `bot_modules/handlers` → All bot command/callback handlers
-- `bot_modules/keyboards` → Inline keyboard layouts
-- `bot_modules/services` → External integrations (YouTube, transcripts, Gemini, PDF)
-- `bot_modules/config` → Environment/config variables
+crispit_bot/
+│
+├── app/
+│ ├── bot/
+│ │ ├── handlers/
+│ │ │ ├── home.py
+│ │ │ ├── transcript.py
+│ │ │ ├── notes.py
+│ │ │ ├── batch.py
+│ │ │ ├── modes.py
+│ │ │ ├── help.py
+│ │ │ ├── errors.py
+│ │ │ └── debug.py
+│ │ ├── keyboards/
+│ │ │ ├── home_kb.py
+│ │ │ ├── notes_kb.py
+│ │ │ ├── batch_kb.py
+│ │ │ └── navigation_kb.py
+│ │ ├── state/
+│ │ │ ├── machine.py
+│ │ │ └── constants.py
+│ │ ├── router.py
+│ │ └── app.py
+│ │
+│ ├── services/
+│ │ ├── youtube_service.py
+│ │ ├── transcript_service.py
+│ │ ├── notes_service.py
+│ │ ├── batch_service.py
+│ │ ├── pdf_service.py
+│ │ ├── llm_service.py
+│ │ ├── text_limit.py
+│ │ └── storage_service.py
+│ │
+│ ├── db/
+│ │ ├── database.py
+│ │ ├── models.py
+│ │ └── migrations.sql (optional)
+│ │
+│ ├── config/
+│ │ ├── settings.py
+│ │ └── logging.py
+│ │
+│ ├── utils/
+│ │ ├── validators.py
+│ │ ├── formatting.py
+│ │ └── helpers.py
+│ │
+│ └── storage/
+│ ├── transcripts/
+│ ├── summaries/
+│ ├── pdf/
+│ └── batch/
+│
+├── run.py
+├── requirements.txt
+├── .env
+└── README.md

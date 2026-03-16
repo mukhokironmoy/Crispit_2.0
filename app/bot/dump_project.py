@@ -1,12 +1,12 @@
 # dump_project.py
-# Creates project_dump.txt in the chosen root folder, containing all text files
-# with a header line showing each file's path relative to the chosen root.
+# Creates project_dump.txt in the project root, containing all text files
+# with a header line showing each file's path relative to the root.
 
 import os
 from pathlib import Path
 
 # ---- Tweak these if you like ----
-OUTPUT_FILENAME = "dump.txt"
+OUTPUT_FILENAME = "project_dump.txt"
 MAX_FILE_SIZE_MB = 3  # skip very large files
 
 IGNORE_DIRS = {
@@ -15,26 +15,34 @@ IGNORE_DIRS = {
     ".venv", "venv", "env",
     "node_modules", ".cache", ".parcel-cache", ".sass-cache",
     "build", "dist", ".next", ".turbo", "target", ".gradle",
-    ".idea", ".vscode", ".terraform", "data", "logs", 
+    ".idea", ".vscode", ".terraform", "telegram_in_data", "telegram_out_data", "docs", "data",
+    "Milestone_0", "Milestone_1", "Milestone_2", "Milestone_3"
 }
 
+# Common binary/heavy extensions to skip
 IGNORE_FILE_EXTS = {
+    # compiled/binaries
     ".pyc", ".pyo", ".class", ".o", ".obj", ".a", ".lib",
     ".so", ".dylib", ".dll", ".exe",
+    # archives
     ".zip", ".tar", ".gz", ".bz2", ".xz", ".7z", ".rar",
+    # media
     ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".ico", ".webp",
     ".mp3", ".wav", ".flac", ".ogg",
     ".mp4", ".mov", ".avi", ".mkv", ".webm",
+    # fonts
     ".ttf", ".otf", ".eot", ".woff", ".woff2",
+    # dbs and others
     ".db", ".db3", ".sqlite", ".sqlite3", ".pdf", ".bin", ".iso",
-    ".log", ".md", ".txt", ".docx", ".md", ".txt"
+    ".log"
 }
 
+# Exact file names to skip (secrets/locks/dump itself)
 IGNORE_FILE_NAMES = {
     OUTPUT_FILENAME,
     ".env", ".env.local", ".env.development", ".env.production",
     "Pipfile.lock", "poetry.lock", "package-lock.json", "yarn.lock", "pnpm-lock.yaml",
-    "Thumbs.db", ".DS_Store"
+    "Thumbs.db", ".DS_Store", "dump_project.py", "requirements.txt"
 }
 
 
@@ -48,42 +56,29 @@ def should_skip_file(path: Path) -> bool:
         if path.stat().st_size > MAX_FILE_SIZE_MB * 1024 * 1024:
             return True
     except OSError:
-        return True
+        return True  # if we can't stat, skip it
     return False
 
 
 def main():
-    script_root = Path(__file__).resolve().parent
-
-    # Prompt user
-    user_input = input(
-        "Enter folder path to dump (press Enter to dump project root): "
-    ).strip()
-
-    # Determine root directory
-    if user_input:
-        chosen_root = Path(user_input).expanduser().resolve()
-        if not chosen_root.exists() or not chosen_root.is_dir():
-            print("❌ Invalid directory path.")
-            return
-    else:
-        chosen_root = script_root
-
-    out_path = chosen_root / OUTPUT_FILENAME
+    root = Path(__file__).resolve().parent
+    out_path = root / OUTPUT_FILENAME
 
     with out_path.open("w", encoding="utf-8") as out:
-        for dirpath, dirnames, filenames in os.walk(chosen_root, topdown=True):
+        for dirpath, dirnames, filenames in os.walk(root, topdown=True):
+            # Prune ignored directories (by name)
             dirnames[:] = [d for d in dirnames if d not in IGNORE_DIRS]
 
             for fname in filenames:
                 fpath = Path(dirpath) / fname
-
+                # Skip dump file and other ignored files
                 if should_skip_file(fpath):
                     continue
 
-                rel = fpath.relative_to(chosen_root).as_posix()
+                rel = fpath.relative_to(root).as_posix()
                 out.write(f"\n\n--- FILE: {rel} ---\n\n")
 
+                # Best-effort read in text
                 try:
                     with fpath.open("r", encoding="utf-8") as f:
                         out.write(f.read())

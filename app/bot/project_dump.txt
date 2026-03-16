@@ -1,91 +1,6 @@
 
 
---- FILE: .gitignore ---
-
-.venv/
-.env
-__pycache__/
-*.pyc
-*.log
-
-
---- FILE: README.md ---
-
-crispit_bot/
-│
-├── app/
-│ ├── bot/
-│ │ ├── handlers/
-│ │ │ ├── home.py
-│ │ │ ├── transcript.py
-│ │ │ ├── notes.py
-│ │ │ ├── batch.py
-│ │ │ ├── modes.py
-│ │ │ ├── help.py
-│ │ │ ├── errors.py
-│ │ │ └── debug.py
-│ │ ├── keyboards/
-│ │ │ ├── home_kb.py
-│ │ │ ├── notes_kb.py
-│ │ │ ├── batch_kb.py
-│ │ │ └── navigation_kb.py
-│ │ ├── state/
-│ │ │ ├── machine.py
-│ │ │ └── constants.py
-│ │ ├── router.py
-│ │ └── app.py
-│ │
-│ ├── services/
-│ │ ├── youtube_service.py
-│ │ ├── transcript_service.py
-│ │ ├── notes_service.py
-│ │ ├── batch_service.py
-│ │ ├── pdf_service.py
-│ │ ├── llm_service.py
-│ │ ├── text_limit.py
-│ │ └── storage_service.py
-│ │
-│ ├── db/
-│ │ ├── database.py
-│ │ ├── models.py
-│ │ └── migrations.sql (optional)
-│ │
-│ ├── config/
-│ │ ├── settings.py
-│ │ └── logging.py
-│ │
-│ ├── utils/
-│ │ ├── validators.py
-│ │ ├── formatting.py
-│ │ └── helpers.py
-│ │
-│ └── storage/
-│ ├── transcripts/
-│ ├── summaries/
-│ ├── pdf/
-│ └── batch/
-│
-├── run.py
-├── requirements.txt
-├── .env
-└── README.md
-
-
---- FILE: run.py ---
-
-from app.bot.app import create_app
-from app.config.logging import logger
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run_polling(close_loop=False)
-
-
---- FILE: app/__init__.py ---
-
-
-
---- FILE: app/bot/app.py ---
+--- FILE: app.py ---
 
 import os
 from dotenv import load_dotenv
@@ -192,7 +107,7 @@ def create_app():
     logger.info("✅ Crispit Bot setup successfully!")
     return app
 
---- FILE: app/bot/callbacks.py ---
+--- FILE: callbacks.py ---
 
 # Navigation
 CB_NAV_HOME = "nav:home"
@@ -210,7 +125,7 @@ CB_NOTES_OUTPUT_PDF = "note_output:pdf"
 
 
 
---- FILE: app/bot/router.py ---
+--- FILE: router.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, CommandHandler, CallbackQueryHandler, MessageHandler, filters
@@ -268,7 +183,7 @@ def register(app):
     app.add_handler(CallbackQueryHandler(button_router , pattern=r"^(nav:|home:|notes:)"))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, text_router))
 
---- FILE: app/bot/state_management.py ---
+--- FILE: state_management.py ---
 
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -301,7 +216,7 @@ def clear_state(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(f"STATE | user_id={user.id} username={user.username} | STATE CLEARED")
 
---- FILE: app/bot/handlers/home.py ---
+--- FILE: handlers/home.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, CommandHandler, CallbackQueryHandler, MessageHandler
@@ -382,7 +297,7 @@ async def show_home(update:Update, context: ContextTypes.DEFAULT_TYPE):
 def register(app):
     app.add_handler(CommandHandler("start", show_home))
 
---- FILE: app/bot/handlers/notes.py ---
+--- FILE: handlers/notes.py ---
 
 # python
 import asyncio
@@ -564,8 +479,6 @@ async def send_notes(update, context, results, invalid_urls):
     # ------------------------------------------------------------------
     # 2) SEND NOTES
     # ------------------------------------------------------------------
-    from app.utils.text_splitter import split_text_for_telegram
-    
     if output_type == "txt":
         logger.info(f"user_id={user.id} username={user.username} | Sending notes as text")
 
@@ -577,24 +490,16 @@ async def send_notes(update, context, results, invalid_urls):
                     with open(Path(entry["notes_path"]), "r", encoding="utf-8") as f:
                         notes = f.read()
 
-                    # Chunking notes correctly
-                    chunks = split_text_for_telegram(notes, max_length=4000) # Give extra margin for telegram limit
-                    
-                    # Ensure first chunk gets the title
-                    if chunks:
-                        chunks[0] = f"**{entry['title']}**\n\n{chunks[0]}"
+                    final_output = f"{entry['title']}\n\n{notes}"
 
-                    for idx, chunk in enumerate(chunks):
-                        try:
-                            await target.reply_text(chunk, parse_mode=ParseMode.MARKDOWN)
-                            await asyncio.sleep(0.3) # brief pause to prevent rate limit from multi-message blasts
-                        except Exception as chunk_e:
-                            logger.exception(f"send_notes | Error sending chunk {idx} for text notes\n{chunk_e}")
-                            await target.reply_text(f"⚠️ Failed to send part of the notes for {entry['url']}.")
-                            break # stop sending following chunks if one failed
+                    await asyncio.wait_for(
+                        target.reply_text(final_output, parse_mode=ParseMode.MARKDOWN),
+
+                        timeout=10
+                    )
 
                     logger.info(
-                        f"user_id={user.id} username={user.username} | Notes sent for {entry['video_id']} in {len(chunks)} chunks"
+                        f"user_id={user.id} username={user.username} | Notes sent for {entry['video_id']}"
                     )
 
                 except Exception as e:
@@ -611,45 +516,8 @@ async def send_notes(update, context, results, invalid_urls):
 
     elif output_type == "pdf":
         logger.info(f"user_id={user.id} username={user.username} | PDF output selected")
-        from app.services.file_converter import md_to_pdf
-
-        for entry in results:
-            logger.info(f"send_notes | processing pdf for video_id={entry.get('video_id')}")
-
-            if entry.get("completed") is True:
-                try:
-                    # Convert to PDF
-                    pdf_path = md_to_pdf(entry["notes_path"], user.id)
-                    
-                    final_output = f"**{entry['title']}**\n\n_Here are your notes exported as PDF!_"
-                    
-                    # Send document
-                    with open(pdf_path, 'rb') as pdf_file:
-                        await asyncio.wait_for(
-                            target.reply_document(
-                                document=pdf_file,
-                                filename=f"{entry['title']}.pdf",
-                                caption=final_output,
-                                parse_mode=ParseMode.MARKDOWN
-                            ),
-                            timeout=30 # longer timeout for file upload
-                        )
-
-                    logger.info(
-                        f"user_id={user.id} username={user.username} | PDF Notes sent for {entry['video_id']}"
-                    )
-
-                except Exception as e:
-                    logger.exception(f"send_notes | Error sending pdf notes\n{e}")
-                    await target.reply_text(
-                        f"⚠️ Failed to send PDF notes for {entry['url']}"
-                    )
-
-            else:
-                await target.reply_text(
-                    f"⚠️ Could not generate notes for {entry['url']}.\nReason: {entry.get('reason')}",
-                    reply_markup=back_to_notes_kb()
-                )
+        # PDF handling will go here
+        pass
 
     # ------------------------------------------------------------------
     # 4) WARN ABOUT INVALID URLS
@@ -924,7 +792,7 @@ def register(app):
 
 
 
---- FILE: app/bot/handlers/transcript.py ---
+--- FILE: handlers/transcript.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes, CommandHandler, CallbackQueryHandler, MessageHandler, filters
@@ -1201,7 +1069,7 @@ async def fetch_transcript_for_notes(user, video_id):
 #     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, transcript_url_handler))
         
 
---- FILE: app/bot/jobs/notes_job.py ---
+--- FILE: jobs/notes_job.py ---
 
 # processors
 from app.services.notes_processor import *
@@ -1233,7 +1101,7 @@ async def notes_job(user:User, valid_url_data:list, current_processing:str):
     else:
         process_results = []
 
---- FILE: app/bot/keyboards/home_kb.py ---
+--- FILE: keyboards/home_kb.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -1251,7 +1119,7 @@ def nav_home_keyboard() -> InlineKeyboardMarkup:
         [InlineKeyboardButton("⬅️ Return to Home", callback_data=CB_NAV_HOME)]
     ])
 
---- FILE: app/bot/keyboards/notes_kb.py ---
+--- FILE: keyboards/notes_kb.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -1351,7 +1219,7 @@ def notes_next_options_kb() -> InlineKeyboardMarkup:
     ])
 
 
---- FILE: app/bot/keyboards/transcript_kb.py ---
+--- FILE: keyboards/transcript_kb.py ---
 
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ContextTypes
@@ -1367,846 +1235,3 @@ def transcript_next_options_kb() -> InlineKeyboardMarkup:
         [InlineKeyboardButton("🔗 Transcribe another video", callback_data=CB_HOME_TRANSCRIPT)],
         [InlineKeyboardButton("⬅️ Back to Home", callback_data=CB_NAV_HOME)]
     ])
-
---- FILE: app/config/logging.py ---
-
-import logging
-from pathlib import Path
-from datetime import datetime
-
-# Creating the log directory
-log_dir = Path("logs")
-log_dir.mkdir(exist_ok=True)
-
-# Creating the log files
-timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-log_file = log_dir / f"crispit_{timestamp}.log"
-
-# Configure the logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)s | %(message)s",
-    handlers=[
-        logging.FileHandler(log_file, encoding="utf-8"),
-        logging.StreamHandler()
-    ]
-)
-
-# Suppress noisy logs
-logging.getLogger("httpx").setLevel(logging.WARNING)
-logging.getLogger("telegram.request").setLevel(logging.WARNING)
-
-logger = logging.getLogger("crispit")
-
---- FILE: app/config/settings.py ---
-
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-BOT_TOKEN = os.getenv("telegram_token")
-
---- FILE: app/db/base.py ---
-
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from pathlib import Path
-
-
-# Creating the engine
-DATABASE_URL = "sqlite:///crispit.db"
-engine = create_engine(DATABASE_URL, echo=False)
-
-# Defining the decalrative base
-Base = declarative_base()
-
-# Create session factory
-SessionLocal = sessionmaker(bind=engine)
-
---- FILE: app/db/db_init.py ---
-
-from .base import Base, engine
-from .models import *
-from .seed import seed_batch_modes, seed_default_notes_modes
-from app.config.logging import logger
-
-def init_db():
-    logger.info("🚀 Initializing database...")
-
-    # Create all tables
-    Base.metadata.create_all(engine)
-
-    # Seed the default notes modes
-    seed_default_notes_modes()
-
-    # Seed the batch modes
-    seed_batch_modes()
-
-    logger.info("✅ Database ready!")
-
-if __name__ == "__main__":
-    init_db()
-
---- FILE: app/db/models.py ---
-
-from sqlalchemy import Column, Integer, String, Text, Boolean, ForeignKey, Enum, DateTime, TIMESTAMP, UniqueConstraint, select, union_all, literal
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
-from .base import Base
-
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=True)
-    current_mode_callback = Column(String, default="note_mode:1")
-    current_processing = Column(String, default="Single")
-
-    # Relationships
-    note_modes = relationship("NotesModes", back_populates="user", cascade="all, delete-orphan")
-    video_requests = relationship("VideoRequests", back_populates="user", cascade="all, delete-orphan")
-
-class DefaultNotesModes(Base):
-    __tablename__ = "default_notes_modes"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    prompt = Column(Text, nullable=False, default="Summarise the following and give in a crisp bulleted manner.")
-    output_type = Column(Enum("pdf","txt", name="global_output_type_enum"),default="pdf", nullable=False)
-    callback_data = Column(String, nullable=False, unique=True)    
-
-
-class NotesModes(Base):
-    __tablename__ = "notes_modes"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    name = Column(String, nullable=False)
-    prompt = Column(Text, nullable=False, default="Summarise the following and give in a crisp bulleted manner in under 2500 characters. No fluff. Give only the required output.")
-    output_type = Column(Enum("pdf","txt", name="output_type_enum"),default="txt", nullable=False)
-    callback_data = Column(String, nullable=False, unique=True)    
-
-    # Relationships
-    user = relationship("User", back_populates="note_modes")
-
-    __table_args__ = (UniqueConstraint("user_id", "name"),)
-
-    # method to get the name for a given callback
-    @classmethod
-    def get_name_for_callback(cls, session, user_id, callback_data):
-        user_mode = (
-            select(cls.name)
-            .where(
-                cls.user_id == user_id,
-                cls.callback_data == callback_data,
-            )
-        )
-
-        default_mode = (
-            select(DefaultNotesModes.name)
-            .where(DefaultNotesModes.callback_data == callback_data)
-        )
-
-        result = session.execute(
-            union_all(user_mode, default_mode).limit(1)
-        ).scalar_one_or_none()
-
-        return result
-    
-    # method to get the output for a given callback
-    @classmethod
-    def get_output_for_callback(cls, session, user_id, callback_data):
-        user_mode = (
-            select(cls.output_type)
-            .where(
-                cls.user_id == user_id,
-                cls.callback_data == callback_data,
-            )
-        )
-
-        default_mode = (
-            select(DefaultNotesModes.output_type)
-            .where(DefaultNotesModes.callback_data == callback_data)
-        )
-
-        result = session.execute(
-            union_all(user_mode, default_mode).limit(1)
-        ).scalar_one_or_none()
-
-        return result
-
-    # method to get the prompt for a given callback 
-    @classmethod
-    def get_prompt_for_callback(cls, session, user_id, callback_data):
-        user_mode = (
-            select(cls.prompt)
-            .where(
-                cls.user_id == user_id,
-                cls.callback_data == callback_data,
-            )
-        )
-
-        default_mode = (
-            select(DefaultNotesModes.prompt)
-            .where(DefaultNotesModes.callback_data == callback_data)
-        )
-
-        result = session.execute(
-            union_all(
-                user_mode,
-                default_mode
-            ).limit(1)
-        ).scalar_one_or_none()
-
-        return result
-
-
-class ProcessingModes(Base):
-    __tablename__ = "processing_modes"
-
-    id = Column(Integer, primary_key=True)
-    name = Column(Enum("Single","Batch (Default)","Batch (One per page/text)", name="processing_mode_name"), nullable=False, unique=True)
-    description = Column(Text)
-    callback_data = Column(String, nullable=False)
-
-class VideoRequests(Base):
-    __tablename__ = "video_requests"
-
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    video_id = Column(Text, nullable=False)
-    mode_used = Column(String, default=None)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    transcript_path = Column(Text, default=None, nullable=True)
-    notes_path = Column(Text, default=None, nullable=True)
-    completed = Column(Boolean, default=False, nullable=False)
-
-
-    # Relationships
-    user = relationship("User", back_populates="video_requests")
-
-class ReusableRequests(Base):
-    __tablename__ = "reusable_requests"
-
-    id = Column(Integer, primary_key=True)
-    video_id = Column(Text, nullable=False)
-    type = Column(Enum("Transcript", "Notes", name="file_type_enum"), nullable=False)
-    mode = Column(String, default=None)
-    file_path = Column(String, nullable=False)
-
-    __table_args__ = (
-    UniqueConstraint("video_id", "type", "mode", name="uq_common_file_map"),
-    )
-
-
-
-
-
-
-
-
---- FILE: app/db/seed.py ---
-
-from pathlib import Path
-from .base import SessionLocal
-from .models import ProcessingModes, DefaultNotesModes
-from app.config.logging import logger
-
-
-def seed_default_notes_modes():
-    session = SessionLocal()
-
-    # Load prompts safely
-    PROMPT_01 = Path(r"data\prompts\01_Crispit_Default_txt.txt").read_text(encoding="utf-8")
-    PROMPT_02 = Path(r"data\prompts\02_Crispit_Default_pdf.txt").read_text(encoding="utf-8")
-    PROMPT_03 = Path(r"data\prompts\03_Crispit_Default_pdf_long.txt").read_text(encoding="utf-8")
-
-    if session.query(DefaultNotesModes).count() == 0:
-        default_modes = [
-            ("Crispit (Text)", PROMPT_01, "txt", "note_mode:1"),
-            ("Crispit (Fit to 1 page)", PROMPT_02, "pdf","note_mode:2"),
-            ("Crispit (Detailed pdf)", PROMPT_03, "pdf","note_mode:3"),
-        ]
-
-        try:
-            for name, prompt, output_type, callback_data in default_modes:
-                session.add(
-                    DefaultNotesModes(
-                        name=name,
-                        prompt=prompt,
-                        output_type=output_type,
-                        callback_data=callback_data
-                    )
-                )
-            session.commit()
-            logger.info("🌱 DefaultNotesModes seeded.")
-        except Exception as e:
-            session.rollback()
-            logger.exception(f"Error seeding DefaultNotesModes: {e}")
-    else:
-        logger.info("🌱 DefaultNotesModes already seeded. No reseeding required.")
-
-    session.close()
-
-
-
-def seed_batch_modes():
-    session = SessionLocal()
-
-    if session.query(ProcessingModes).count() == 0:
-        default_modes = [
-            ("Single", "Each summary returned as a separate document", "pr_mode:single"),
-            ("Batch (Default)", "All summaries merged into one document", "pr_mode:batch_default"),
-            ("Batch (One per page/text)", "Each summary fit into one page.", "pr_mode:batch_1pp")
-        ]
-
-        try:
-            for name, desc, callback_data in default_modes:
-                session.add(ProcessingModes(name=name, description=desc, callback_data=callback_data))
-            session.commit()
-            logger.info("🌱 BatchModes seeded.")
-        except Exception as e:
-            session.rollback()
-            logger.exception(f"Error seeding BatchModes: {e}")
-    else:
-        logger.info("🌱 BatchModes already seeded. No reseeding required.")
-
-    session.close()
-
-
---- FILE: app/db/__init__.py ---
-
-
-
---- FILE: app/services/file_converter.py ---
-
-import markdown
-from markdown_pdf import MarkdownPdf, Section
-from pathlib import Path
-
-def get_unique_pdf_path(directory: Path, base_name: str) -> Path:
-    pdf_path = directory / f"{base_name}.pdf"
-
-    counter = 1
-    while pdf_path.exists():
-        pdf_path = directory / f"{base_name}_{counter}.pdf"
-        counter += 1
-
-    return pdf_path
-
-def md_to_pdf(md_file: str | Path, user_id):
-    md_path = Path(md_file)
-
-    pdf_dir = Path(f"data/buffer")
-    pdf_dir.mkdir(parents=True, exist_ok=True)
-    pdf_path = get_unique_pdf_path(pdf_dir, str(user_id))   
-
-    text = md_path.read_text(encoding="utf-8")
-
-    pdf = MarkdownPdf()
-    pdf.add_section(Section(text))
-    pdf.save(pdf_path)
-
-    return pdf_path
-
-if __name__ == '__main__':
-    md_file = Path(r"data\notes\notes.txt")
-    md_to_pdf(md_file, 1234)
-
-
---- FILE: app/services/gemini_notes.py ---
-
-from google import genai
-from google.genai import types
-import os
-from dotenv import load_dotenv
-from pathlib import Path
-import re
-import asyncio
-import hashlib
-
-# services
-from app.services.youtube_data import get_video_id
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# API SETUP
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
-client = genai.Client(api_key=api_key)
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# GET NOTES
-async def get_notes(transcript:str, prompt:str, filename:str, title=None, url=None):
-
-    # Initialise the header text for the prompt
-    header = ""
-
-    # Add data
-    if title:
-        header = header + f"Title = {title}\n"
-    if url:
-        header = header + f"url = {url}\n"
-
-    # Set the prompt
-    prompt = header + prompt
-
-    # Set the data
-    data = prompt + transcript
-
-    # Get the response from llm
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=[data],
-        config=types.GenerateContentConfig(thinking_config=types.ThinkingConfig(thinking_budget=0))
-    )
-    
-    # Saving the notes
-    notes_dir = Path(f"data/notes")
-    notes_dir.mkdir(parents=True, exist_ok=True)
-    notes_path = Path(f"{notes_dir}/{filename}.txt")
-
-    with open(notes_path, 'w', encoding='utf-8') as f:
-        f.write(response.text)
-
-    return str(notes_path)
-"""---------------------------------------------------------------------------------------------------------------"""
-
-async def main():
-    transcript_path = Path(r"data\transcripts\-lp2Kt6RJkQ_transcript.txt")
-
-    with open(transcript_path, "r", encoding="utf-8") as f:
-        transcript = f.read()
-
-    prompt_path = Path(r"data\prompts\02_Crispit_Default_pdf.txt")
-
-    with open(prompt_path, 'r', encoding="utf-8") as f:
-        prompt = f.read()
-
-    notes = await get_notes(transcript, prompt, "notes", "https://www.youtube.com/watch?v=wvH0jNZMzIM")
-    print(notes)
-    
-if __name__ == "__main__":
-    asyncio.run(main())
-
-
-
-
-
-    
-    
-
-
-
---- FILE: app/services/input_validator.py ---
-
-# services
-from app.services.youtube_data import *
-
-# logger
-from app.config.logging import logger
-
-def validate_input(input, user):
-    # Split the input into urls
-    urls = [url.strip() for url in input.split("\n")]
-
-    # Initialise the output dictionary
-    valid_url_data = []
-    invalid_urls = []
-
-    for url in urls:
-        # Get video id
-        try:
-            video_id = get_video_id(url)
-            valid_url_data.append({"url":url, "video_id":video_id})  
-
-        except Exception as e:
-            logger.exception(f"user_id={user.id} username={user.username} | Invalid URL sent by user. Couldn't fetch video_id for {url} \n {e}")
-            invalid_urls.append({"url":url})       
-
-        finally:
-            continue
-
-    return valid_url_data, invalid_urls
-
---- FILE: app/services/notes_processor.py ---
-
-# python
-from pathlib import Path
-import hashlib
-
-# states
-from app.bot.state_management import *
-
-# services
-from app.services.youtube_data import *
-from app.services.gemini_notes import get_notes
-from app.services.transcriptor import *
-
-# db and models
-from app.db.models import *
-from app.db.base import SessionLocal
-
-# handlers
-from app.bot.handlers.home import *
-
-# keyboards
-from app.bot.keyboards.notes_kb import *
-
-# logger
-from app.config.logging import logger
-
-# telegram 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ContextTypes, CommandHandler, CallbackQueryHandler, MessageHandler, filters
-from telegram.constants import ParseMode
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# GET A PROMPT FINGERPRINT FOR NAMING FILE
-def prompt_fingerprint(prompt: str) -> str:
-    return hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:12]
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# SINGLE VIDEO PROCESSOR
-async def single_processor(user:User, valid_url_data:dict) -> dict:
-    session = SessionLocal()
-    
-    # GET ESSENTIALS FOR GENERATING NOTES
-    #########################################################################
-    url = valid_url_data["url"]
-    video_id = valid_url_data["video_id"]
-
-    # 1) Get the transcript data
-    transcript_path = await fetch_transcript_for_notes(user, video_id)
-    with open(transcript_path, 'r', encoding='utf-8') as f:
-        transcript = f.read()
-
-    # 2) Get the prompt
-    logger.info(f"user_id={user.id} username={user.username} | Fetching prompt for mode = {NotesModes.get_name_for_callback(session, user.id, user.current_mode_callback)}")
-    prompt = NotesModes.get_prompt_for_callback(session, user.id, user.current_mode_callback)
-    logger.info(f"user_id={user.id} username={user.username} | Prompt fetched as:\n\n {prompt}.")
-    
-    # 3) Set filename
-    notes_mode_name = NotesModes.get_name_for_callback(session, user.id, user.current_mode_callback)
-    prompt_hash = prompt_fingerprint(prompt)
-
-    filename = f"{video_id}_{notes_mode_name}_{prompt_hash}"
-
-    session.close()
-
-    # 4) Get title
-    youtube_data = get_yt_data(url)
-    title = youtube_data["Title"]
-
-    # CREATE THE RESULT TEMPLATE
-    #########################################################################
-    result = {
-    "url" : url,
-    "video_id": video_id,
-    "title": title,
-    "notes_path": None,
-    "completed": False,
-    "reason" : None
-    }
-
-
-    # GENERATE THE NOTES
-    #########################################################################
-    
-    # 1) Get the notes from LLM
-    try:
-        notes_path = await get_notes(transcript, prompt, filename, title, url)
-        logger.info(f"user_id={user.id} username={user.username} | Notes received from LLM.")
-        
-        # Update result
-        result["notes_path"] = notes_path
-    
-    except Exception as e:
-        logger.exception(f"user_id={user.id} username={user.username} | Error while getting notes from LLM:- \n{e}")
-
-        # Update result
-        result["reason"] = "LLM generation error"
-        return result
-        
-
-    # 2) Create db objects
-    new_notes_request = VideoRequests(user_id=user.id, video_id=video_id, transcript_path=str(transcript_path), notes_path=str(notes_path), completed=True)
-    transcript_cache = ReusableRequests(video_id=video_id, type="Transcript", file_path=str(transcript_path))
-    notes_cache = ReusableRequests(video_id=video_id, type="Notes", file_path=str(notes_path))
-        
-    # 3) Save to db
-    try:
-        session.add(new_notes_request)
-        session.add(transcript_cache)
-        session.add(notes_cache)
-        session.commit()
-        logger.info(f"DB | user_id={user.id} username={user.username} | Notes request and cache data saved to db.")
-
-        # Update result
-        result["completed"] = True
-
-        
-    except Exception as e:
-        session.rollback()
-        logger.exception(f"DB | user_id={user.id} username={user.username} |Error while saving notes request and cache data to db. \n{e}")
-
-        # Update result
-        result["reason"] = "DB Error"
-        return result
-        
-
-    finally:
-        session.close() 
-
-    
-    # RETURN THE RESULTS
-    #########################################################################
-    logger.info(f"user_id={user.id} username={user.username} | Notes completed for {video_id} successfully")
-    logger.info(f"user_id={user.id} username={user.username} | Result generated as {result}")
-    return result
-
-    
-
-
-
-
-
-
-
-
-
---- FILE: app/services/transcriptor.py ---
-
-from youtube_transcript_api import YouTubeTranscriptApi
-from datetime import timedelta
-from pathlib import Path
-import re
-from app.config.logging import logger
-
-# services
-from app.services.youtube_data import *
-from app.services.gemini_notes import get_notes
-
-# db and models
-from app.db.models import *
-from app.db.base import SessionLocal
-
-# keyboards
-from app.bot.keyboards.notes_kb import *
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# FUNCTION TO CHOOSE THE TRANSCRIPT
-def choose_transcript(video_id):
-    # Initialise the youtube transcript
-    ytt_api = YouTubeTranscriptApi()
-    transcript_list = ytt_api.list(video_id)
-
-    # Set up the transcript variables
-    auto_generated_transcript = None
-    manual_transcript = None
-
-    # Choose the correct transcript object
-    for transcript in transcript_list:
-        if transcript.is_generated == False:
-            # If a manual english transcript exists then choose that
-            if transcript.language_code.startswith("en"):
-                manual_transcript = transcript
-                break
-            # If a manual non english transcript exists then choose that
-            if manual_transcript == None:
-                manual_transcript = transcript
-        else:
-            # Choose the auto generated transcript as a fallback
-            if auto_generated_transcript == None:
-                auto_generated_transcript = transcript
-
-    # Return the manual one if exists else return autogenerated one
-    if manual_transcript: return manual_transcript
-    else: return auto_generated_transcript
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# FUNCTION TO GET TIMESTAMPS
-def format_time(seconds):
-    return str(timedelta(seconds=int(seconds)))
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# FUNCTION TO GET THE TRANSCRIPT
-async def get_transcript(transcript, user, video_id):
-    # Safety check
-    if transcript is None:
-        raise ValueError("No subtitle found for this YouTube URL")
-    
-    try:
-        # Get transcript data
-        data = transcript.fetch()
-
-        # Set the output directory
-        out_dir = Path(f"data/transcripts")
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        # Set the output path
-        out_path = Path(f"{out_dir}/{video_id}_transcript.txt")
-
-        # Write the transcript onto the file
-        with out_path.open('w', encoding='utf-8', newline="\n") as f:
-            for entry in data:
-                formatted_time = format_time(entry.start)
-                text = entry.text
-                f.write(f"{formatted_time} : {text}\n")
-
-        return str(out_path)
-    
-    except Exception as e:
-        raise ValueError(f"Error occured : {e}")
-
-"""---------------------------------------------------------------------------------------------------------------"""
-# FUNCTION TO FETCH THE TRANSCRIPT FOR NOTES PROCESS
-async def fetch_transcript_for_notes(user, video_id):
-
-    # GET DATA FROM DB IF ALREADY EXISTS
-    #########################################################################
-
-    # Check if a request exists for the same video id
-    session = SessionLocal()
-    prev_request = session.query(ReusableRequests).filter(
-        (ReusableRequests.video_id == video_id) & 
-        (ReusableRequests.type=="Transcript")
-    ).first()
-    
-    # Check if the transcript file exists
-    if prev_request:
-        transcript_path = Path(prev_request.file_path)
-        
-        if transcript_path.exists():
-            logger.info(f"user_id={user.id} username={user.username} | Transcript exists in db and in storage")
-           
-            # Send the transcript file
-            try:
-                return transcript_path         
-            
-            except Exception as e:
-                logger.exception(f"⚠️ Error during extracting the transcript from db: \n{e}")
-
-        else:
-            logger.info(f"user_id={user.id} username={user.username} | Request exists but transcript doesn't exist")
-
-    else:
-        logger.info(f"user_id={user.id} username={user.username} | No previous request exists for given video id.")
-
-
-    # OTHERWISE GENERATE A NEW TRANSCRIPT
-    #########################################################################
-
-    # choose a transcript option
-    transcript_object = choose_transcript(video_id)
-
-    # If no transcript return None
-    if not transcript_object:
-        logger.exception(f"user_id={user.id} username={user.username} | No subtitles available for url provided by user.")
-        transcript = None
-        return transcript
-    
-    # Get the transcript if available
-    try:
-        transcript_path = await get_transcript(transcript_object, user, video_id)
-        logger.info(f"user_id={user.id} username={user.username} | Transcript generated successfuly for video id {video_id}")
-    except Exception as e:
-        logger.exception(f"user_id={user.id} username={user.username} | Error while getting transcript.")
-
-
-    # RETURN THE TRANSCRIPT
-    #########################################################################
-    return transcript_path
-
-
-
-
-
-
-    
-
-
-
---- FILE: app/services/youtube_data.py ---
-
-import json, urllib.parse, urllib.request
-import re
-
-def get_yt_data(url: str) -> dict:
-    o = f"https://www.youtube.com/oembed?url={urllib.parse.quote(url)}&format=json"
-    with urllib.request.urlopen(o, timeout=5) as r:
-        data = json.loads(r.read().decode("utf-8"))
-        clean_title = data.get("title", "").replace("\xa0", " ")
-    return {
-        "Title": clean_title,
-        "Uploader": data.get("author_name"),
-    }
-
-def get_video_id(url):
-    if "watch?v=" in url:
-        return url.split("watch?v=")[-1].split("&")[0]
-    elif "youtu.be/" in url:
-        return url.split("youtu.be/")[-1].split("?")[0]
-    elif "youtube.com/live/" in url:
-        return url.split("youtube.com/live/")[-1].split("?")[0]
-
-    match = re.search(r"(?:v=|\/)([0-9A-Za-z_-]{11})", url)
-    if match:
-        return match.group(1)
-
-    raise ValueError("Invalid YouTube URL format!")
-
-if __name__ == "__main__":
-    url = input("Enter the url: ")
-    
-    print(get_yt_data(url))
-    print(get_video_id(url))
-
---- FILE: app/utils/text_splitter.py ---
-
-def split_text_for_telegram(text: str, max_length: int = 4050) -> list[str]:
-    """
-    Splits long text into multiple chunks that stay within Telegram's max message length.
-    Splits cleanly on double newlines (paragraphs), then single newlines.
-    """
-    if len(text) <= max_length:
-        return [text]
-
-    chunks = []
-    
-    # Simple split by double newline
-    paragraphs = text.split('\n\n')
-    current_chunk = ""
-
-    for paragraph in paragraphs:
-        if len(current_chunk) + len(paragraph) + 2 > max_length:
-            if current_chunk:
-                chunks.append(current_chunk.strip())
-                current_chunk = ""
-            
-            if len(paragraph) > max_length:
-                # If a single paragraph is still too long, split by newline
-                lines = paragraph.split('\n')
-                for line in lines:
-                    if len(current_chunk) + len(line) + 1 > max_length:
-                        if current_chunk:
-                            chunks.append(current_chunk.strip())
-                            current_chunk = ""
-                            
-                        if len(line) > max_length:
-                            # Hard split if a single line is too long
-                            for i in range(0, len(line), max_length):
-                                chunks.append(line[i:i+max_length])
-                        else:
-                            current_chunk = current_chunk + line + "\n"
-                    else:
-                        current_chunk = current_chunk + line + "\n"
-            else:
-                current_chunk = current_chunk + paragraph + "\n\n"
-        else:
-            current_chunk = current_chunk + paragraph + "\n\n"
-            
-    if current_chunk.strip():
-        chunks.append(current_chunk.strip())
-
-    return chunks

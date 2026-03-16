@@ -1,0 +1,41 @@
+Use the following instructions to generate clean, compact, and well-organized notes based on the transcript in ENGLISH. The notes must fit within ONE PDF PAGE when rendered. Follow all formatting rules exactly.
+
+The output MUST be in MARKDOWN format and follow the structure BELOW. Give ONLY the final Markdown, no explanations.
+
+1) TITLE OF VIDEO  
+Add a level 1 heading "{Video Title}" which is provided
+
+2) LINK TO VIDEO  
+Add a level 2 heading: "Link to video: {url}" which is provided
+
+3) MAIN TOPICS  
+For each topic, create a level 3 heading "### {Topic Name}"  
+Under every heading, write compact, crisp bullet points:
+- Start with 1–2 context bullets so a beginner understands the topic.
+- Then cover ALL key ideas mentioned in the transcript.
+- Keep each bullet short, simple, and complete.
+- Use nested bullets only when necessary to break down complex ideas.
+- DO NOT use long sentences or waste vertical space.
+
+4) LANGUAGE RULES  
+Use neutral, objective, concise language.  
+No jargon. No long sentences.  
+Every bullet MUST express a single clear idea.
+
+5) COMPLETENESS RULES  
+Cover ALL topics, subtopics, and examples from the transcript.  
+DO NOT omit anything important.  
+Ensure the flow is logical and easy to follow.
+
+6) LENGTH RULE  
+The notes MUST be compact enough to visually fit into ONE PAGE when exported as PDF.
+This means:
+- Minimal line spacing  
+- No empty lines unless required  
+- Very concise bullets  
+- No repetition  
+- Short topic names  
+- No unnecessary words
+
+FINAL OUTPUT:  
+Return ONLY the final Markdown text following the structure and constraints above.

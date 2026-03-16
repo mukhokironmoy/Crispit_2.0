@@ -1,0 +1,238 @@
+﻿app/bot/handlers/notes.py:5:1: F401 'telegram.InlineKeyboardButton' imported but unused
+app/bot/handlers/notes.py:5:1: F401 'telegram.InlineKeyboardMarkup' imported but unused
+app/bot/handlers/notes.py:6:1: F401 'telegram.ext.CommandHandler' imported but unused
+app/bot/handlers/notes.py:6:1: F401 'telegram.ext.MessageHandler' imported but unused
+app/bot/handlers/notes.py:6:1: F401 'telegram.ext.filters' imported but unused
+app/bot/handlers/notes.py:6:80: E501 line too long (100 > 79 characters)
+app/bot/handlers/notes.py:8:1: F401 'telegram.helpers.escape_markdown' imported but unused
+app/bot/handlers/notes.py:15:1: F403 'from app.bot.keyboards.notes_kb import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:16:1: F403 'from app.bot.state_management import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:19:1: F403 'from app.bot.callbacks import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:25:1: F403 'from app.services.youtube_data import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:26:1: F403 'from app.services.transcriptor import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:27:1: F403 'from app.services.notes_processor import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:36:1: F403 'from app.db.models import *' used; unable to detect undefined names
+app/bot/handlers/notes.py:38:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:40:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:40:31: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:40:47: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:47:30: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:47:43: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:48:24: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:48:64: E231 missing whitespace after ','
+app/bot/handlers/notes.py:48:80: E501 line too long (121 > 79 characters)
+app/bot/handlers/notes.py:48:80: E231 missing whitespace after ','
+app/bot/handlers/notes.py:50:23: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:50:65: E231 missing whitespace after ','
+app/bot/handlers/notes.py:50:80: E501 line too long (122 > 79 characters)
+app/bot/handlers/notes.py:50:81: E231 missing whitespace after ','
+app/bot/handlers/notes.py:59:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:60:80: E501 line too long (130 > 79 characters)
+app/bot/handlers/notes.py:61:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:63:24: W291 trailing whitespace
+app/bot/handlers/notes.py:67:80: E501 line too long (189 > 79 characters)
+app/bot/handlers/notes.py:68:22: E251 unexpected spaces around keyword / parameter equals
+app/bot/handlers/notes.py:68:23: F405 'notes_main_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:71:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:73:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:73:35: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:73:51: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:76:13: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:79:17: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:80:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:83:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:84:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:85:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:92:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:93:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:99:30: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:99:43: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:109:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:110:80: E501 line too long (116 > 79 characters)
+app/bot/handlers/notes.py:111:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:115:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:116:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:119:5: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:119:32: F405 'GENERATING_NOTES' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:127:80: E501 line too long (81 > 79 characters)
+app/bot/handlers/notes.py:128:80: E501 line too long (114 > 79 characters)
+app/bot/handlers/notes.py:131:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:132:5: E303 too many blank lines (3)
+app/bot/handlers/notes.py:135:5: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:135:32: F405 'SENDING_NOTES' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:140:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:142:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:150:30: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:150:43: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:150:80: E501 line too long (86 > 79 characters)
+app/bot/handlers/notes.py:151:23: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:151:65: E231 missing whitespace after ','
+app/bot/handlers/notes.py:151:80: E501 line too long (122 > 79 characters)
+app/bot/handlers/notes.py:151:81: E231 missing whitespace after ','
+app/bot/handlers/notes.py:155:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:163:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:171:13: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:173:17: F405 'SENDING_NOTES' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:174:80: E501 line too long (102 > 79 characters)
+app/bot/handlers/notes.py:184:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:186:80: E501 line too long (90 > 79 characters)
+app/bot/handlers/notes.py:189:80: E501 line too long (84 > 79 characters)
+app/bot/handlers/notes.py:193:31: F405 'Path' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:193:80: E501 line too long (85 > 79 characters)
+app/bot/handlers/notes.py:197:77: E261 at least two spaces before inline comment
+app/bot/handlers/notes.py:197:80: E501 line too long (115 > 79 characters)
+app/bot/handlers/notes.py:198:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:205:80: E501 line too long (89 > 79 characters)
+app/bot/handlers/notes.py:206:53: E261 at least two spaces before inline comment
+app/bot/handlers/notes.py:206:80: E501 line too long (114 > 79 characters)
+app/bot/handlers/notes.py:208:80: E501 line too long (113 > 79 characters)
+app/bot/handlers/notes.py:209:80: E501 line too long (111 > 79 characters)
+app/bot/handlers/notes.py:210:34: E261 at least two spaces before inline comment
+app/bot/handlers/notes.py:213:80: E501 line too long (130 > 79 characters)
+app/bot/handlers/notes.py:224:80: E501 line too long (102 > 79 characters)
+app/bot/handlers/notes.py:225:34: F405 'back_to_notes_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:229:80: E501 line too long (88 > 79 characters)
+app/bot/handlers/notes.py:233:80: E501 line too long (92 > 79 characters)
+app/bot/handlers/notes.py:239:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:240:80: E501 line too long (100 > 79 characters)
+app/bot/handlers/notes.py:241:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:251:39: E261 at least two spaces before inline comment
+app/bot/handlers/notes.py:255:80: E501 line too long (110 > 79 characters)
+app/bot/handlers/notes.py:259:80: E501 line too long (82 > 79 characters)
+app/bot/handlers/notes.py:266:80: E501 line too long (102 > 79 characters)
+app/bot/handlers/notes.py:267:34: F405 'back_to_notes_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:276:80: E501 line too long (94 > 79 characters)
+app/bot/handlers/notes.py:284:22: F405 'notes_next_options_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:286:80: E501 line too long (91 > 79 characters)
+app/bot/handlers/notes.py:291:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:293:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:293:40: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:293:56: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:293:80: E501 line too long (83 > 79 characters)
+app/bot/handlers/notes.py:295:21: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:298:25: F405 'CHOOSING_PROCESSING_MODE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:299:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:300:9: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:300:36: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:308:9: W291 trailing whitespace
+app/bot/handlers/notes.py:310:30: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:310:43: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:311:9: F841 local variable 'current_mode' is assigned to but never used
+app/bot/handlers/notes.py:311:24: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:311:64: E231 missing whitespace after ','
+app/bot/handlers/notes.py:311:80: E501 line too long (121 > 79 characters)
+app/bot/handlers/notes.py:311:80: E231 missing whitespace after ','
+app/bot/handlers/notes.py:312:9: F841 local variable 'current_processing' is assigned to but never used
+app/bot/handlers/notes.py:313:9: F841 local variable 'output_type' is assigned to but never used
+app/bot/handlers/notes.py:313:23: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:313:65: E231 missing whitespace after ','
+app/bot/handlers/notes.py:313:80: E501 line too long (122 > 79 characters)
+app/bot/handlers/notes.py:313:81: E231 missing whitespace after ','
+app/bot/handlers/notes.py:316:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:323:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:324:80: E501 line too long (130 > 79 characters)
+app/bot/handlers/notes.py:325:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:331:9: F541 f-string is missing placeholders
+app/bot/handlers/notes.py:331:74: F405 'choose_processing_modes_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:331:80: E501 line too long (131 > 79 characters)
+app/bot/handlers/notes.py:331:102: E231 missing whitespace after ','
+app/bot/handlers/notes.py:334:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:336:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:336:37: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:336:53: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:336:80: E501 line too long (80 > 79 characters)
+app/bot/handlers/notes.py:338:21: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:341:25: F405 'CHOOSING_PROCESSING_MODE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:342:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:343:9: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:343:36: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:357:26: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:357:39: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:360:38: F405 'ProcessingModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:361:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:373:80: E501 line too long (146 > 79 characters)
+app/bot/handlers/notes.py:374:30: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:374:43: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:377:80: E501 line too long (83 > 79 characters)
+app/bot/handlers/notes.py:383:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:384:80: E501 line too long (130 > 79 characters)
+app/bot/handlers/notes.py:385:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:388:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:390:5: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:390:32: F405 'CHOSSING_OUTPUT_TYPE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:393:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:395:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:395:36: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:395:52: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:397:21: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:400:25: F405 'CHOSSING_OUTPUT_TYPE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:401:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:402:9: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:402:36: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:410:11: W291 trailing whitespace
+app/bot/handlers/notes.py:413:80: E501 line too long (123 > 79 characters)
+app/bot/handlers/notes.py:424:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:425:80: E501 line too long (132 > 79 characters)
+app/bot/handlers/notes.py:426:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:432:9: F541 f-string is missing placeholders
+app/bot/handlers/notes.py:432:67: F405 'choose_output_type_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:432:80: E501 line too long (119 > 79 characters)
+app/bot/handlers/notes.py:432:90: E231 missing whitespace after ','
+app/bot/handlers/notes.py:435:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:437:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:437:33: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:437:49: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:439:21: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:442:25: F405 'CHOSSING_OUTPUT_TYPE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:443:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:444:9: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:444:36: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:458:26: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:458:39: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:463:5: E303 too many blank lines (2)
+app/bot/handlers/notes.py:464:18: F405 'CB_NOTES_OUTPUT_TEXT' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:466:20: F405 'CB_NOTES_OUTPUT_PDF' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:469:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:471:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:472:5: E303 too many blank lines (4)
+app/bot/handlers/notes.py:473:5: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:473:32: F405 'CHOOSING_NOTES_MODE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:474:51: F541 f-string is missing placeholders
+app/bot/handlers/notes.py:474:80: E501 line too long (185 > 79 characters)
+app/bot/handlers/notes.py:474:112: F405 'choose_notes_modes_kb' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:474:155: E231 missing whitespace after ','
+app/bot/handlers/notes.py:476:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:478:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:478:32: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:478:48: E231 missing whitespace after ':'
+app/bot/handlers/notes.py:480:21: F405 'get_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:482:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:483:25: F405 'CHOOSING_NOTES_MODE' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:484:80: E501 line too long (103 > 79 characters)
+app/bot/handlers/notes.py:485:9: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:485:36: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:491:28: W291 trailing whitespace
+app/bot/handlers/notes.py:499:26: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:499:39: F405 'User' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:500:41: F405 'DefaultNotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:501:33: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:501:52: F405 'NotesModes' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:501:80: E501 line too long (87 > 79 characters)
+app/bot/handlers/notes.py:518:80: E501 line too long (137 > 79 characters)
+app/bot/handlers/notes.py:521:80: E501 line too long (83 > 79 characters)
+app/bot/handlers/notes.py:527:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:528:80: E501 line too long (130 > 79 characters)
+app/bot/handlers/notes.py:529:1: W293 blank line contains whitespace
+app/bot/handlers/notes.py:531:5: F405 'set_state' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:531:32: F405 'AWAITING_NOTES_URL' may be undefined, or defined from star imports: app.bot.callbacks, app.bot.keyboards.notes_kb, app.bot.state_management, app.db.models, app.services.notes_processor, app.services.transcriptor, app.services.youtube_data
+app/bot/handlers/notes.py:534:80: E501 line too long (210 > 79 characters)
+app/bot/handlers/notes.py:536:1: E302 expected 2 blank lines, found 0
+app/bot/handlers/notes.py:537:80: E501 line too long (84 > 79 characters)
+app/bot/handlers/notes.py:538:80: E501 line too long (84 > 79 characters)
+app/bot/handlers/notes.py:539:80: E501 line too long (81 > 79 characters)
+app/bot/handlers/notes.py:540:1: W391 blank line at end of file
+app/utils/text_splitter.py:3:80: E501 line too long (89 > 79 characters)
+app/utils/text_splitter.py:10:1: W293 blank line contains whitespace
+app/utils/text_splitter.py:20:1: W293 blank line contains whitespace
+app/utils/text_splitter.py:29:1: W293 blank line contains whitespace
+app/utils/text_splitter.py:42:1: W293 blank line contains whitespace

@@ -1,0 +1,43 @@
+Use the following instructions to generate clean, well-organized, and complete notes based on the transcript in ENGLISH. The goal is to extract EVERY major topic and express them in a clear, structured markdown format.
+
+The output MUST be in MARKDOWN format and follow the structure BELOW. Give ONLY the final Markdown, no explanations.
+
+1) TITLE OF Notes  
+Add a level 1 heading: "{Video Title}" which will be provided
+
+2) LINK TO VIDEO  
+Add a level 2 heading: "Link to video: {url}" which will be provided
+
+3) INDEX OF TOPICS  
+Add "### Index of Topics Covered in the Notes"  
+List ALL main topics in numbered form (1, 2, 3...).  
+Ensure every topic listed appears as a section below.
+
+4) MAIN TOPICS AS HEADINGS  
+For each topic, create a level 4 heading "#### {Topic Name}"
+
+Under each heading:
+- Begin with 1–2 bullets providing simple introductory context for beginners.
+- Then list ALL points mentioned in the transcript in crisp, easy-to-read sentences.
+- Every bullet must be a complete sentence, not a phrase.
+- Use nested bullets where a point needs breaking down.
+- Maintain logical progression and avoid redundancy.
+- Keep formatting compact but do not restrict content.
+
+5) LANGUAGE AND STYLE RULES  
+Use neutral, objective language.  
+Avoid complex sentences and jargon.  
+Ensure each bullet conveys one clear idea.
+
+6) COMPLETENESS RULES  
+Cover ALL topics, subtopics, explanations, examples, and reasoning present in the transcript.  
+DO NOT omit any part of the content.  
+Ensure smooth flow from one idea to the next.
+
+7) LENGTH RULE  
+There is NO character or page limit.  
+Focus on clarity, accuracy, and completeness.  
+Use as many bullets as needed for full understanding, while keeping the style concise.
+
+FINAL OUTPUT:  
+Return ONLY the final Markdown document following the structure and rules above.
